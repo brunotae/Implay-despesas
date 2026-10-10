@@ -80,18 +80,32 @@ h3{font-size:14px;margin:0}
 .chips button[aria-pressed="true"]{background:var(--lime);border-color:var(--lime);color:var(--ink)}
 .datechip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 10px;min-height:34px;font-size:13px;color:var(--fg)}
 
-.mgroup{display:flex;flex-direction:column;gap:8px}
+.mgroup{display:flex;flex-direction:column;gap:5px}
 .mh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .mh span{color:var(--muted);font-size:14px}
-.drow{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:start;text-align:left;width:100%;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--st,var(--muted));border-radius:12px;padding:12px;min-width:0}
-.drow .dd{display:flex;flex-direction:column;align-items:center;line-height:1}
-.drow .dd b{font-family:var(--f-display);font-weight:800;font-size:21px}
-.drow .dd span{font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
-.drow .db{display:flex;flex-direction:column;gap:3px;min-width:0}
-.drow .t{font-weight:700;font-size:14px;overflow-wrap:anywhere}
-.drow .p{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
-.drow .val{font-family:var(--f-display);font-weight:700;font-size:17px;white-space:nowrap}
-.pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}
+.drow{display:grid;grid-template-columns:38px minmax(0,1fr) auto;column-gap:10px;row-gap:3px;align-items:center;text-align:left;width:100%;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--st,var(--muted));border-radius:9px;padding:6px 10px;min-width:0}
+.drow .dd{grid-column:1;grid-row:1/span 2;display:flex;flex-direction:column;align-items:center;line-height:1}
+.drow .dd b{font-family:var(--f-display);font-weight:800;font-size:17px}
+.drow .dd span{font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.drow .db{grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:0;min-width:0;line-height:1.3}
+.drow .t{font-weight:700;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.drow .p{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.drow .val{grid-column:3;grid-row:1/span 2;font-family:var(--f-display);font-weight:700;font-size:16px;white-space:nowrap;text-align:right}
+.drow .pills{grid-column:2;grid-row:2;margin:0}
+.drow .linkbtn{padding:0}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px;align-items:center}
+a.pill{text-decoration:none}
+@media (min-width:820px){
+  main.wide,.top.wide .topin{max-width:1060px}
+  .drow{grid-template-columns:38px minmax(0,1fr) auto 110px;padding:5px 12px}
+  .drow .dd{grid-row:1}
+  .drow .dd b{font-size:15px}
+  .drow .db{flex-direction:row;gap:10px;align-items:baseline}
+  .drow .t{flex:0 1 auto;max-width:55%}
+  .drow .p{flex:1 1 0}
+  .drow .pills{grid-column:3;grid-row:1;flex-wrap:nowrap;justify-content:flex-end}
+  .drow .val{grid-column:4;grid-row:1}
+}
 .pill{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:1px 7px;font-size:11px;font-weight:600;color:var(--muted)}
 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
 .pill.plain::before{display:none}
@@ -301,7 +315,8 @@ function draw(){
   document.getElementById('lvl').textContent=NIVEL[u.nivel];
   const home=UI.tab==='home';
   document.getElementById('ic').innerHTML=`<button class="iconbtn" data-act="tab" data-tab="${home?'menu':'home'}" aria-label="${home?'Menu':'Voltar ao início'}" aria-pressed="${!home}">${home?ICON_USER:ICON_X}</button>`;
-  document.getElementById('view').innerHTML=(VIEWS[UI.tab]||VIEWS.home)();
+  const vw=document.getElementById('view'); const wd=['lista','completar','reemb','pessoa','reembPagos','hist'].includes(UI.tab); vw.classList.toggle('wide',wd); document.querySelector('header.top').classList.toggle('wide',wd);
+  vw.innerHTML=(VIEWS[UI.tab]||VIEWS.home)();
   if(UI.sheet&&!document.getElementById('sheet').hidden) openDesp(UI.sheet);
 }
 const VIEWS={};
@@ -317,8 +332,8 @@ function saldoPorPessoa(){
 const VOLTAR=(to='home',label='Voltar')=>`<button class="linkbtn" data-act="tab" data-tab="${to}">‹ ${label}</button>`;
 function rowDesp(d){const [st,c]=status(d);const dt=pD(d.data);const n=(d.comprovantes||[]).length;return `<button class="drow s-${c}" data-desp="${d.id}">
     <span class="dd"><b class="num">${pad(dt.getDate())}</b><span>${MES3[dt.getMonth()]}</span></span>
-    <span class="db"><span class="t">${esc(d.favorecido||d.descricao||'Gasto')}</span><span class="p">${d.favorecido&&d.descricao?esc(d.descricao)+' · ':''}${d.categoria?esc(d.categoria):'<span class="c-warn">a classificar</span>'}</span>
-      <span class="pills"><span class="pill c-${c}">${st}</span><span class="pill plain c-fg">${esc(pagadorNome(d))}</span>${n?`<span class="pill plain">${ICON_CLIP} ${n}</span>`:'<span class="pill c-bad">sem comprovante</span>'}</span></span>
+    <span class="db"><span class="t">${esc(d.favorecido||d.descricao||'Gasto')}</span><span class="p">${d.favorecido&&d.descricao?esc(d.descricao)+' · ':''}${d.categoria?esc(d.categoria):'<span class="c-warn">a classificar</span>'}</span></span>
+      <span class="pills"><span class="pill c-${c}">${st}</span><span class="pill plain c-fg">${esc(pagadorNome(d))}</span>${n?`<span class="pill plain">${ICON_CLIP} ${n}</span>`:'<span class="pill c-bad">sem comprovante</span>'}</span>
     <span class="val num">${money(d.valor)}</span></button>`;}
 function porMes(js){ const meses=[...new Set(js.map(d=>d.data.slice(0,7)))];
   return meses.map(m=>{const ds=js.filter(d=>d.data.startsWith(m));const [y,mm]=m.split('-').map(Number);return `<section class="mgroup"><div class="mh"><h2>${MES[mm-1]} ${y}</h2><span class="num">${money(ds.filter(ativa).reduce((s,d)=>s+Number(d.valor),0))}</span></div>${ds.map(rowDesp).join('')}</section>`;}).join(''); }
@@ -335,7 +350,7 @@ const mi=(k)=>`<svg viewBox="0 0 24 24" width="26" height="26" fill="none" strok
 
 VIEWS.home=()=>{
   const u=ME(), canAdd=u.nivel!=='basic', adm=u.nivel==='adm';
-  const items=[['reemb','rec','Quem tem a receber','reembolso por pessoa'],['lista','list','Gastos','todos os lançamentos'],['mes','chart','Resumo do mês','quanto gastou e em quê'],['completar','tag','A completar','sem categoria ou comprovante'],['hist','clock','Histórico','quem fez o quê']];
+  const items=[['reemb','rec','Reembolsos','quanto a Implay deve a cada um'],['lista','list','Gastos','todos os lançamentos'],['mes','chart','Resumo do mês','quanto gastou e em quê'],['completar','tag','A completar','sem categoria ou comprovante'],['hist','clock','Histórico','quem fez o quê']];
   return `<div class="sub">Olá, ${esc((u.nome||'').split(' ')[0])}</div>
   ${canAdd?`<button class="launch" data-act="nova">+ Lançar gasto<span>valor · fornecedor · forma de pagamento</span></button>`:''}
   <div class="menu">
@@ -512,18 +527,19 @@ VIEWS.menu=()=>{
 };
 VIEWS.reemb=()=>{
   const adm=ME().nivel==='adm', ss=saldoPorPessoa().filter(x=>Math.abs(x.aberto)>0.004), tot=ss.reduce((a,x)=>a+Math.max(0,x.aberto),0);
-  return `${VOLTAR()}<h1 class="v">Quem tem a receber</h1>
-  ${adm?`<button class="btn ok big" data-act="pagar">Registrar pagamento de reembolso</button>`:''}
-  ${ss.length?`<div class="panel" style="gap:0">${ss.map(x=>`<button class="prow" data-act="pessoa" data-k="${esc(x.k)}"><span><strong>${esc(x.nome)}</strong><span class="sub" style="display:block">${x.abertos} gasto${x.abertos!==1?'s':''} em aberto</span></span><b class="num"${x.aberto<0?' style="color:var(--ok)"':''}>${money(x.aberto)}</b></button>`).join('')}</div>
-  <div class="row" style="justify-content:space-between"><span class="sub">Total a reembolsar</span><b class="num" style="font-family:var(--f-display);font-size:22px">${money(tot)}</b></div>`
-  :'<div class="panel"><p class="empty">Ninguém tem reembolso a receber.</p></div>'}
-  <button class="linkbtn" data-act="tab" data-tab="reembPagos">Ver pagamentos já feitos</button>`;
+  return `${VOLTAR()}<h1 class="v">Reembolsos</h1><div class="sub">Quanto a Implay deve a cada pessoa que pagou gastos dela.</div>
+  ${adm?`<button class="btn ok big" data-act="pagar">Implay pagou um reembolso · registrar</button>`:''}
+  ${ss.length?`<div class="panel" style="gap:0">${ss.map(x=>`<button class="prow" data-act="pessoa" data-k="${esc(x.k)}"><span><strong>${esc(x.nome)}</strong><span class="sub" style="display:block">${x.aberto<0?'recebeu a mais · ':'Implay deve · '}${x.abertos} gasto${x.abertos!==1?'s':''} em aberto</span></span><b class="num"${x.aberto<0?' style="color:var(--ok)"':''}>${money(x.aberto)}</b></button>`).join('')}</div>
+  <div class="row" style="justify-content:space-between"><span class="sub">Implay deve no total</span><b class="num" style="font-family:var(--f-display);font-size:22px">${money(tot)}</b></div>`
+  :'<div class="panel"><p class="empty">A Implay não deve reembolso a ninguém.</p></div>'}
+  <button class="linkbtn" data-act="tab" data-tab="reembPagos">Ver reembolsos que a Implay já pagou</button>`;
 };
-function rowPag(r,canDel){ const dt=pD(r.data); return `<div class="drow s-ok" style="grid-template-columns:52px 1fr auto">
+const dataExt=k=>{const d=pD(k);return `${d.getDate()} de ${MES[d.getMonth()]}${d.getFullYear()!==now().getFullYear()?' de '+d.getFullYear():''}`;};
+function fileLink(c){ const url=URLS[c.path]; if(url===undefined) signUrls([c.path]); return url?`<a class="pill plain c-fg" href="${url}" target="_blank" rel="noopener">${ICON_CLIP} comprovante</a>`:`<span class="pill plain">${ICON_CLIP} …</span>`; }
+function rowPag(r,canDel){ const dt=pD(r.data); return `<div class="drow s-ok">
   <span class="dd"><b class="num">${pad(dt.getDate())}</b><span>${MES3[dt.getMonth()]}</span></span>
-  <span class="db"><span class="t">${esc(nomeK(keyR(r)))}</span><span class="p">${esc(r.forma)}${r.obs?' · '+esc(r.obs):''} · por ${esc(pName(r.lancado_por))}</span>
-   ${(r.comprovantes||[]).length?`<div class="files" style="margin-top:6px;grid-template-columns:repeat(auto-fill,minmax(64px,1fr))">${r.comprovantes.map(c=>fileThumb(c,false)).join('')}</div>`:''}
-   ${canDel?(UI.confirm==='delpag:'+r.id?`<span class="row" style="margin-top:6px"><button class="btn sm danger" data-act="delpag" data-id="${r.id}">Confirmar exclusão</button><button class="btn sm" data-act="cancelc">Não</button></span>`:`<button class="linkbtn" style="font-size:12px;color:var(--bad)" data-act="delpagA" data-id="${r.id}">Excluir pagamento</button>`):''}</span>
+  <span class="db"><span class="t">Implay reembolsou ${esc(nomeK(keyR(r)))}</span><span class="p">${dataExt(r.data)} · ${esc(r.forma)}${r.obs?' · '+esc(r.obs):''} · lançado por ${esc(pName(r.lancado_por))}</span></span>
+  <span class="pills">${(r.comprovantes||[]).map(fileLink).join('')}${canDel?(UI.confirm==='delpag:'+r.id?`<button class="btn sm danger" data-act="delpag" data-id="${r.id}">Confirmar exclusão</button><button class="btn sm" data-act="cancelc">Não</button>`:`<button class="linkbtn" style="font-size:12px;color:var(--bad)" data-act="delpagA" data-id="${r.id}">Excluir</button>`):''}</span>
   <span class="val num" style="color:var(--ok)">${money(r.valor)}</span></div>`; }
 VIEWS.pessoa=()=>{
   const adm=ME().nivel==='adm', k=UI.pessoa;
@@ -531,27 +547,27 @@ VIEWS.pessoa=()=>{
   const abertos=DESP.filter(d=>d.origem==='pessoal'&&ativa(d)&&keyD(d)===k&&COVER[d.id]!=='ok');
   const pags=REEMB.filter(r=>keyR(r)===k);
   return `${VOLTAR('reemb')}<h1 class="v">${esc(s0.nome)}</h1>
-  <div class="panel"><span class="sub">${s0.aberto<0?'Recebeu a mais':'A receber'}</span><b class="num bigval" style="color:${s0.aberto<0?'var(--ok)':'var(--warn)'}">${money(Math.abs(s0.aberto))}</b><span class="sub">Pagou: ${money(s0.total)} · Já recebeu: ${money(s0.pago)}</span></div>
-  ${adm?`<button class="btn ok big" data-act="pagar" data-k="${esc(k)}">Registrar pagamento de reembolso</button>`:''}
-  ${pags.length?`<section class="mgroup"><div class="mh"><h2>Pagamentos recebidos</h2><span class="num">${money(s0.pago)}</span></div>${pags.map(r=>rowPag(r,adm)).join('')}</section>`:''}
-  ${abertos.length?`<section class="mgroup"><div class="mh"><h2>Gastos em aberto</h2></div>${abertos.map(rowDesp).join('')}</section>`:''}`;
+  <div class="panel"><span class="sub">${s0.aberto<-0.004?`${esc(s0.nome)} recebeu a mais da Implay`:s0.aberto>0.004?`Implay deve a ${esc(s0.nome)}`:`Implay não deve nada a ${esc(s0.nome)}`}</span><b class="num bigval" style="color:${s0.aberto<0?'var(--ok)':'var(--warn)'}">${money(Math.abs(s0.aberto))}</b><span class="sub">${esc(s0.nome)} pagou gastos da Implay: ${money(s0.total)} · Implay já reembolsou: ${money(s0.pago)}</span></div>
+  ${adm?`<button class="btn ok big" data-act="pagar" data-k="${esc(k)}">Implay pagou ${esc(s0.nome)} · registrar</button>`:''}
+  ${pags.length?`<section class="mgroup"><div class="mh"><h2>Reembolsos pagos pela Implay</h2><span class="num">${money(s0.pago)}</span></div>${pags.map(r=>rowPag(r,adm)).join('')}</section>`:''}
+  ${abertos.length?`<section class="mgroup"><div class="mh"><h2>Gastos ainda não reembolsados</h2></div>${abertos.map(rowDesp).join('')}</section>`:''}`;
 };
 VIEWS.reembPagos=()=>{
   const adm=ME().nivel==='adm';
-  return `${VOLTAR('reemb')}<h1 class="v">Pagamentos feitos</h1>
-  ${adm&&REEMB.length?'<button class="linkbtn" data-act="csvpag">Exportar planilha dos pagamentos</button>':''}
-  ${REEMB.length?REEMB.map(r=>rowPag(r,adm)).join(''):'<div class="panel"><p class="empty">Nenhum pagamento de reembolso ainda.</p></div>'}`;
+  return `${VOLTAR('reemb')}<h1 class="v">Reembolsos pagos pela Implay</h1>
+  ${adm&&REEMB.length?'<button class="linkbtn" data-act="csvpag">Exportar planilha dos reembolsos</button>':''}
+  ${REEMB.length?`<section class="mgroup">${REEMB.map(r=>rowPag(r,adm)).join('')}</section>`:'<div class="panel"><p class="empty">A Implay ainda não pagou nenhum reembolso.</p></div>'}`;
 };
 VIEWS.pagar=()=>{
   const P=UI.pform, ss=saldoPorPessoa(), pessoas=[...pessoasLista()];
   ss.filter(x=>!pessoas.some(p=>p.k===x.k)).forEach(x=>pessoas.push({k:x.k,nome:x.nome}));
   const saldo=k=>(ss.find(x=>x.k===k)||{aberto:0}).aberto;
   const hoje=dkey(now()), ontem=(()=>{const d=now();d.setDate(d.getDate()-1);return dkey(d);})();
-  return `${VOLTAR('reemb')}<h1 class="v">Pagamento de reembolso</h1><div class="sub">Pode ser parcial: o saldo da pessoa diminui pelo valor pago.</div>
+  return `${VOLTAR('reemb')}<h1 class="v">Implay pagou reembolso</h1><div class="sub">Pode ser parcial: o que a Implay deve à pessoa diminui pelo valor pago.</div>
   <form class="panel" id="fpag" novalidate>
-    <div class="f"><span>Para quem</span><div class="chips wrap" role="group" aria-label="Para quem">${pessoas.map(p=>`<button type="button" data-ppessoa="${esc(p.k)}" aria-pressed="${P.k===p.k}">${esc(p.nome)}${saldo(p.k)>0?` · ${money(saldo(p.k))}`:''}</button>`).join('')}</div></div>
+    <div class="f"><span>Implay pagou para</span><div class="chips wrap" role="group" aria-label="Implay pagou para">${pessoas.map(p=>`<button type="button" data-ppessoa="${esc(p.k)}" aria-pressed="${P.k===p.k}">${esc(p.nome)}${saldo(p.k)>0?` · ${money(saldo(p.k))}`:''}</button>`).join('')}</div></div>
     <label class="f"><span>Valor pago</span><input id="p-valor" class="money num" inputmode="decimal" placeholder="R$ 0,00" value="${esc(P.valor)}"></label>
-    ${P.k&&saldo(P.k)>0?`<small class="sub" style="margin-top:-8px">Saldo atual: ${money(saldo(P.k))}${parseValor(P.valor)>0?` · depois deste pagamento: ${money(saldo(P.k)-parseValor(P.valor))}`:''}</small>`:''}
+    ${P.k&&saldo(P.k)>0?`<small class="sub" style="margin-top:-8px">Implay deve hoje: ${money(saldo(P.k))}${parseValor(P.valor)>0?` · depois deste pagamento: ${money(saldo(P.k)-parseValor(P.valor))}`:''}</small>`:''}
     <div class="f"><span>Forma</span><div class="chips wrap" role="group" aria-label="Forma">${['PIX','Transferência','Dinheiro','Outro'].map(x=>`<button type="button" data-pforma="${x}" aria-pressed="${P.forma===x}">${x}</button>`).join('')}</div></div>
     <div class="f"><span>Quando</span><div class="chips wrap" role="group" aria-label="Data">
       <button type="button" data-pdia="${hoje}" aria-pressed="${P.data===hoje}">Hoje</button><button type="button" data-pdia="${ontem}" aria-pressed="${P.data===ontem}">Ontem</button>
@@ -561,7 +577,7 @@ VIEWS.pagar=()=>{
       <input type="file" id="d-file" accept="image/*,application/pdf" multiple hidden><p class="sub" id="upmsg" hidden style="margin:0">Enviando…</p></div>
     <label class="f"><span>Observação</span><input id="p-obs" value="${esc(P.obs)}" placeholder="Ex.: PIX da conta do Thiago"></label>
     <p class="err" id="p-err" hidden></p>
-    <button class="btn ok big" type="submit">Registrar pagamento</button>
+    <button class="btn ok big" type="submit">Registrar reembolso</button>
   </form>`;
 };
 function readPForm(){ const P=UI.pform; if(!P||!document.getElementById('fpag')) return; const v=id=>document.getElementById(id)?.value??''; P.valor=v('p-valor'); P.data=v('p-data')||P.data; P.obs=v('p-obs').trim(); }
@@ -670,7 +686,7 @@ document.addEventListener('submit',async e=>{
     const {error}=await sb.from('reembolsos').insert(row); btn.disabled=false;
     if(error) return fail(error.message);
     await loadAll(); const sl=(saldoPorPessoa().find(x=>x.k===P.k)||{aberto:0}).aberto;
-    toast(`Pagamento registrado · saldo de ${nomeK(P.k)}: ${money(sl)}`); UI.pessoa=P.k; UI.pform=null; UI.confirm=null; UI.tab='pessoa'; draw(); window.scrollTo(0,0); return;
+    toast(`Implay reembolsou ${nomeK(P.k)} em ${money(valor)}${sl>0.004?` · ainda deve ${money(sl)}`:''}`); UI.pessoa=P.k; UI.pform=null; UI.confirm=null; UI.tab='pessoa'; draw(); window.scrollTo(0,0); return;
   }
   if(f.id==='fdesp'){
     readForm(); const F=UI.form, err=document.getElementById('d-err'), fail=m=>{err.textContent=m;err.hidden=false;err.scrollIntoView({block:'center'});};
