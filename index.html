@@ -162,6 +162,8 @@ const money=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const NIVEL={adm:'ADM',manager:'Manager',basic:'Basic'};
 const FORMAS=['PIX','Cartão de crédito','Cartão de débito','Boleto','Transferência','Dinheiro'];
+// Etapa de aprovação desligada por enquanto (ligar = true + rodar o SQL da aprovação)
+const APROVACAO=false;
 const CATEGORIAS=['Abertura da empresa (CNPJ, taxas, cartório)','Contabilidade e jurídico','Aluguel, condomínio e contas do escritório','Obra e reforma do escritório','Móveis e decoração','Equipamentos de live (câmera, luz, áudio)','Informática e celulares','Internet e telefone','Softwares e assinaturas','Marketing e identidade visual','Amostras e produtos','Transporte e deslocamento','Alimentação','Outros'];
 const BUCKET='comprovantes';
 const ICON_USER='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>';
@@ -295,7 +297,7 @@ VIEWS.lista=()=>{
   const ativas=DESP.filter(ativa);
   const total=ativas.reduce((s,d)=>s+Number(d.valor),0);
   const aReemb=DESP.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&d.reemb!=='reembolsado').reduce((s,d)=>s+Number(d.valor),0);
-  const pend=DESP.filter(d=>d.aprov==='pendente');
+  const pend=APROVACAO?DESP.filter(d=>d.aprov==='pendente'):[];
   const saldos=saldoPorPessoa().filter(s=>s.aberto>0);
   let js=[...DESP]; const f=UI.filtro;
   if(f==='reemb') js=js.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&d.reemb!=='reembolsado');
@@ -317,7 +319,7 @@ VIEWS.lista=()=>{
   </div>
   ${pend.length?`<button class="callout" data-act="filtro" data-f="pend" style="text-align:left">${pend.length} gasto${pend.length>1?'s':''} aguardando aprovação · ${money(pend.reduce((s,d)=>s+Number(d.valor),0))}</button>`:''}
   ${canAdd?`<button class="btn pri big" data-act="nova">+ Lançar gasto</button>`:''}
-  <div class="chips" role="group" aria-label="Mostrar">${[['todas','Todos'],['reemb','A reembolsar'],['pend','Aguardando aprovação'],['classificar','A classificar'],['empresa','Conta da empresa'],['recusadas','Recusados']].map(([k,l])=>`<button data-act="filtro" data-f="${k}" aria-pressed="${f===k}">${l}</button>`).join('')}</div>
+  <div class="chips" role="group" aria-label="Mostrar">${[['todas','Todos'],['reemb','A reembolsar'],...(APROVACAO?[['pend','Aguardando aprovação']]:[]),['classificar','A classificar'],['empresa','Conta da empresa'],...(APROVACAO?[['recusadas','Recusados']]:[])].map(([k,l])=>`<button data-act="filtro" data-f="${k}" aria-pressed="${f===k}">${l}</button>`).join('')}</div>
   ${meses.length?meses.map(m=>{const ds=js.filter(d=>d.data.startsWith(m));const [y,mm]=m.split('-').map(Number);return `<section class="mgroup"><div class="mh"><h2>${MES[mm-1]} ${y}</h2><span class="num">${money(ds.filter(ativa).reduce((s,d)=>s+Number(d.valor),0))}</span></div>${ds.map(row).join('')}</section>`;}).join('')
     :`<div class="panel"><p class="empty">${DESP.length?'Nenhum gasto neste filtro.':'Nenhum gasto lançado ainda.'}</p>${!DESP.length&&canAdd?'<p class="sub">Toque em "+ Lançar gasto" para registrar o primeiro. Tire a foto do comprovante na hora.</p>':''}</div>`}`;
 };
@@ -362,10 +364,10 @@ function openDesp(id){
   const u=ME(), adm=u.nivel==='adm', [st,c]=status(d);
   const beneficiario=d.origem==='pessoal'&&d.pagador_id===u.id;
   let acts='';
-  if(d.aprov==='pendente'&&adm) acts+= beneficiario?`<div class="callout">Este reembolso é para você. Outro ADM precisa aprovar.</div>`:`<div class="row"><button class="btn pri" data-act="aprovar" data-id="${d.id}">Aprovar</button><button class="btn danger" data-act="recusarA" data-id="${d.id}">Recusar</button></div>`;
+  if(APROVACAO&&d.aprov==='pendente'&&adm) acts+= beneficiario?`<div class="callout">Este reembolso é para você. Outro ADM precisa aprovar.</div>`:`<div class="row"><button class="btn pri" data-act="aprovar" data-id="${d.id}">Aprovar</button><button class="btn danger" data-act="recusarA" data-id="${d.id}">Recusar</button></div>`;
   if(UI.confirm==='recusar:'+d.id) acts+=`<form class="panel" id="frec" data-id="${d.id}"><label class="f"><span>Motivo da recusa</span><input id="r-mot" required placeholder="Ex.: sem comprovante, gasto pessoal"></label><div class="row"><button class="btn danger" type="submit">Recusar gasto</button><button class="btn" type="button" data-act="cancelc">Voltar</button></div></form>`;
   if(adm&&d.aprov==='aprovada'&&d.origem==='pessoal'&&d.reemb!=='reembolsado'&&!beneficiario) acts+=`<button class="btn ok" data-act="reemb1" data-id="${d.id}">Marcar como reembolsado</button>`;
-  const podeEditar=adm||(u.nivel==='manager'&&d.lancado_por===u.id&&d.aprov==='pendente');
+  const podeEditar=adm||(u.nivel==='manager'&&d.lancado_por===u.id&&(APROVACAO?d.aprov==='pendente':d.reemb!=='reembolsado'));
   if(podeEditar) acts+=`<div class="row"><button class="btn" data-act="editar" data-id="${d.id}">Editar</button>${adm?(UI.confirm==='del:'+d.id?`<button class="btn danger" data-act="del" data-id="${d.id}">Confirmar exclusão</button><button class="btn" data-act="cancelc">Não excluir</button>`:`<button class="btn danger" data-act="delA" data-id="${d.id}">Excluir</button>`):''}</div>`;
   const comp=d.comprovantes||[];
   const hist=HIST.filter(h=>h.despesa_id===d.id);
@@ -395,7 +397,7 @@ function closeSheet(){ document.getElementById('sheet').hidden=true; UI.sheet=nu
 // ---------- formulário ----------
 function openForm(d){
   const u=ME();
-  UI.form=d?{...JSON.parse(JSON.stringify(d)),comprovantes:[...(d.comprovantes||[])]}:{id:null,valor:'',data:dkey(now()),descricao:'',favorecido:'',doc_favorecido:'',categoria:'',forma:'PIX',origem:'pessoal',pagador_id:u.id,pagador_nome:'',comprovantes:[],obs:''};
+  UI.form=d?{...JSON.parse(JSON.stringify(d)),comprovantes:[...(d.comprovantes||[])]}:{id:null,valor:'',data:dkey(now()),descricao:'',favorecido:'',doc_favorecido:'',categoria:'',forma:'',origem:'pessoal',pagador_id:u.id,pagador_nome:'',comprovantes:[],obs:''};
   UI.tab='form'; closeSheet(); draw(); window.scrollTo(0,0);
 }
 VIEWS.form=()=>{
@@ -403,7 +405,7 @@ VIEWS.form=()=>{
   const hoje=dkey(now()), ontem=(()=>{const d=now();d.setDate(d.getDate()-1);return dkey(d);})();
   const quem=F.origem==='empresa'?'empresa':(F.pagador_id||'outro');
   const opts=[...ativos().map(s=>[s.id,s.id===ME().id?s.nome+' (eu)':s.nome]),['outro','Outra pessoa'],['empresa','Conta da empresa']];
-  return `<div><h1 class="v">${F.id?'Editar gasto':'Novo gasto'}</h1><div class="sub">${ME().nivel==='manager'&&!F.id?'Depois de lançar, um ADM aprova.':'Valor, foto e o que foi. O resto é opcional.'}</div></div>
+  return `<div><h1 class="v">${F.id?'Editar gasto':'Novo gasto'}</h1><div class="sub">${APROVACAO&&ME().nivel==='manager'&&!F.id?'Depois de lançar, um ADM aprova.':'Valor, fornecedor e forma de pagamento são obrigatórios.'}</div></div>
   <form class="panel" id="fdesp" novalidate>
     <label class="f"><span>Valor</span><input id="d-valor" class="money num" inputmode="decimal" placeholder="R$ 0,00" value="${typeof F.valor==='number'?F.valor.toFixed(2).replace('.',','):esc(F.valor)}" required></label>
     <div class="f"><span>Comprovante</span>
@@ -411,6 +413,8 @@ VIEWS.form=()=>{
       <input type="file" id="d-file" accept="image/*,application/pdf" multiple hidden>
       <p class="sub" id="upmsg" hidden style="margin:0">Enviando…</p>
     </div>
+    <label class="f"><span>Fornecedor (pago a)</span><input id="d-fav" value="${esc(F.favorecido)}" placeholder="Ex.: Kalunga, Uber, Contabilidade XP" required></label>
+    <div class="f"><span>Forma de pagamento</span><div class="chips wrap" role="group" aria-label="Forma de pagamento">${FORMAS.map(x=>`<button type="button" data-forma="${x}" aria-pressed="${F.forma===x}">${x}</button>`).join('')}</div></div>
     <label class="f"><span>O que foi</span><input id="d-desc" value="${esc(F.descricao)}" placeholder="Ex.: Uber para o estúdio, café da reunião"></label>
     <div class="f"><span>Quem pagou</span><div class="chips wrap" role="group" aria-label="Quem pagou">${opts.map(([k,l])=>`<button type="button" data-quem="${k}" aria-pressed="${quem===k}">${esc(l)}</button>`).join('')}</div></div>
     <label class="f" ${quem!=='outro'?'hidden':''}><span>Nome de quem pagou</span><input id="d-pagn" value="${esc(F.pagador_nome)}"></label>
@@ -419,12 +423,8 @@ VIEWS.form=()=>{
       <input type="date" id="d-data" value="${F.data}" aria-label="Outra data" class="datechip"></div></div>
     <button type="button" class="linkbtn" data-act="more">${more?'− Menos detalhes':'+ Mais detalhes (opcional)'}</button>
     <div ${more?'':'hidden'} style="display:flex;flex-direction:column;gap:14px">
-      <label class="f"><span>Pago a (fornecedor / pessoa)</span><input id="d-fav" value="${esc(F.favorecido)}" placeholder="Ex.: Kalunga, Uber, Contabilidade XP"></label>
       <label class="f"><span>CNPJ ou CPF de quem recebeu</span><input id="d-doc" value="${esc(F.doc_favorecido)}" inputmode="numeric"></label>
-      <div class="fr">
-        <label class="f"><span>Categoria</span><select id="d-cat"><option value="">A classificar</option>${CATEGORIAS.map(c=>`<option ${F.categoria===c?'selected':''}>${esc(c)}</option>`).join('')}</select></label>
-        <label class="f"><span>Forma</span><select id="d-forma">${FORMAS.map(x=>`<option ${F.forma===x?'selected':''}>${x}</option>`).join('')}</select></label>
-      </div>
+      <label class="f"><span>Categoria</span><select id="d-cat"><option value="">A classificar</option>${CATEGORIAS.map(c=>`<option ${F.categoria===c?'selected':''}>${esc(c)}</option>`).join('')}</select></label>
       <label class="f"><span>Observações</span><textarea id="d-obs">${esc(F.obs)}</textarea></label>
     </div>
     <p class="err" id="d-err" hidden></p>
@@ -436,7 +436,7 @@ VIEWS.form=()=>{
 function readForm(){
   const F=UI.form; if(!F||!document.getElementById('fdesp')) return;
   const v=id=>document.getElementById(id)?.value??'';
-  F.valor=v('d-valor'); F.data=v('d-data')||F.data; F.forma=v('d-forma')||F.forma; F.favorecido=v('d-fav').trim(); F.doc_favorecido=v('d-doc').trim();
+  F.valor=v('d-valor'); F.data=v('d-data')||F.data; F.favorecido=v('d-fav').trim(); F.doc_favorecido=v('d-doc').trim();
   F.descricao=v('d-desc').trim(); F.categoria=v('d-cat'); F.obs=v('d-obs').trim(); F.pagador_nome=v('d-pagn').trim();
 }
 function parseValor(s){ s=String(s).replace(/[R$\s]/g,''); if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.'); const n=Number(s); return isFinite(n)?Math.round(n*100)/100:NaN; }
@@ -453,8 +453,7 @@ VIEWS.menu=()=>{
   </div>
   <section class="panel"><h3>Regras</h3>
     <ul class="sub" style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
-      <li>ADM lança já aprovado, menos reembolso para ele mesmo: aí outro ADM aprova.</li>
-      <li>Manager lança e um ADM aprova.</li>
+      ${APROVACAO?'<li>ADM lança já aprovado, menos reembolso para ele mesmo: aí outro ADM aprova.</li><li>Manager lança e um ADM aprova.</li>':'<li>ADM e Manager lançam, e o gasto já entra valendo (sem etapa de aprovação por enquanto).</li><li>Manager edita só o que lançou, até ser reembolsado.</li>'}
       <li>Basic só consulta.</li>
       <li>Só ADM marca reembolso como pago, edita qualquer gasto ou exclui.</li>
     </ul></section>
@@ -467,7 +466,7 @@ VIEWS.reemb=()=>{
     <div class="row" style="justify-content:space-between"><h2>${esc(s.nome)}</h2><span class="bigval num" style="font-size:30px;color:var(--warn)">${money(s.aberto)}</span></div>
     <div class="tablewrap"><table><tbody>
       <tr><td class="sub">Pagou no total</td><td class="r num">${money(s.total)}</td></tr>
-      <tr><td class="sub">Aguardando aprovação</td><td class="r num">${money(s.pend)}</td></tr>
+      ${APROVACAO?`<tr><td class="sub">Aguardando aprovação</td><td class="r num">${money(s.pend)}</td></tr>`:''}
       <tr><td class="sub">Já reembolsado</td><td class="r num c-ok">${money(s.pago)}</td></tr>
       <tr><td><strong>A receber</strong></td><td class="r num"><strong>${money(s.aberto)}</strong></td></tr>
     </tbody></table></div>
@@ -507,9 +506,10 @@ document.addEventListener('change',async e=>{
 });
 document.addEventListener('focusout',()=>setTimeout(()=>{ if(UI.pendingDraw&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('form'))) draw(); },0));
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-act],[data-desp],[data-quem],[data-dia],[data-lmode]');
+  const t=e.target.closest('[data-act],[data-desp],[data-quem],[data-dia],[data-lmode],[data-forma]');
   if(!t){ if(e.target.id==='sheet') closeSheet(); return; }
   if(t.dataset.lmode){ const el=document.getElementById('l-email'); if(el) UI.email=el.value.trim(); UI.lmode=t.dataset.lmode; UI.aviso=''; draw(); return; }
+  if(t.dataset.forma){ readForm(); UI.form.forma=t.dataset.forma; draw(); return; }
   if(t.dataset.quem){ readForm(); const k=t.dataset.quem; if(k==='empresa'){UI.form.origem='empresa';} else {UI.form.origem='pessoal'; UI.form.pagador_id=k==='outro'?null:k;} draw(); return; }
   if(t.dataset.dia){ readForm(); UI.form.data=t.dataset.dia; const di=document.getElementById('d-data'); if(di) di.value=t.dataset.dia; draw(); return; }
   if(t.dataset.desp&&!t.dataset.act){ UI.confirm=null; openDesp(t.dataset.desp); return; }
@@ -566,7 +566,8 @@ document.addEventListener('submit',async e=>{
     readForm(); const F=UI.form, err=document.getElementById('d-err'), fail=m=>{err.textContent=m;err.hidden=false;err.scrollIntoView({block:'center'});};
     const valor=parseValor(F.valor);
     if(!(valor>0)) return fail('Informe o valor. Ex.: 38,50');
-    if(!F.descricao&&!F.comprovantes.length) return fail('Tire a foto do comprovante ou diga o que foi.');
+    if(!F.favorecido) return fail('Informe o fornecedor (para quem foi pago).');
+    if(!F.forma) return fail('Escolha a forma de pagamento.');
     if(F.origem==='pessoal'&&!F.pagador_id&&!F.pagador_nome) return fail('Informe o nome de quem pagou.');
     const row={valor,data:F.data,descricao:F.descricao,favorecido:F.favorecido,doc_favorecido:F.doc_favorecido,categoria:F.categoria,forma:F.forma,origem:F.origem,pagador_id:F.origem==='empresa'?null:F.pagador_id,pagador_nome:F.origem==='empresa'||F.pagador_id?'':F.pagador_nome,comprovantes:F.comprovantes,obs:F.obs};
     const btns=f.querySelectorAll('button[type=submit]'); btns.forEach(b=>b.disabled=true);
@@ -576,7 +577,7 @@ document.addEventListener('submit',async e=>{
     toast(F.id?'Alterações salvas':(res.data.aprov==='pendente'?'Lançado · aguardando aprovação':'Gasto lançado'));
     const again=e.submitter&&e.submitter.dataset.again==='1';
     await loadAll();
-    if(again){ const keep={pagador_id:row.pagador_id,pagador_nome:row.pagador_nome,origem:row.origem,data:row.data}; openForm(null); Object.assign(UI.form,keep); draw(); }
+    if(again){ const keep={pagador_id:row.pagador_id,pagador_nome:row.pagador_nome,origem:row.origem,data:row.data,forma:row.forma}; openForm(null); Object.assign(UI.form,keep); draw(); }
     else { UI.form=null; UI.tab='lista'; draw(); }
     window.scrollTo(0,0); return;
   }
