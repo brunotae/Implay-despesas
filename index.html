@@ -135,6 +135,16 @@ td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 .gate{max-width:440px;margin:0 auto;padding-inline:16px;padding-block:10vh 40px;display:flex;flex-direction:column;gap:16px}
 .gate .hero{font-family:var(--f-display);font-weight:800;font-size:46px;line-height:.95;text-transform:uppercase}
 .gate .hero b{color:var(--lime);display:block}
+.launch{width:100%;min-height:150px;border-radius:18px;background:var(--lime);color:var(--ink);border:0;font-family:var(--f-display);font-weight:800;font-size:34px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.launch span{font-family:var(--f-body);font-size:13px;font-weight:600;text-transform:none;opacity:.7}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:8px;min-height:116px;color:var(--fg)}
+.mi svg{color:var(--lime)}
+.mi b{font-size:15px}
+.mi small{color:var(--muted);font-size:12px;line-height:1.3}
+.prow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border:0;border-bottom:1px solid var(--line);background:none;width:100%;text-align:left;color:var(--fg)}
+.prow:last-child{border-bottom:0}
+.prow b{font-family:var(--f-display);font-size:24px;color:var(--warn);white-space:nowrap}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--lime);color:var(--ink);font-weight:700;padding:11px 16px;border-radius:10px;z-index:60;max-width:calc(100% - 32px);box-shadow:0 8px 30px rgba(0,0,0,.5)}
 .toast.bad{background:var(--bad);color:#1a0d0a}
 @media (max-width:420px){.brand small{display:none}}
@@ -176,7 +186,7 @@ const CFG_=window.IMPLAY_CONFIG||{};
 let sb=null, SESSION=null, MEP=null;          // MEP = meu perfil
 let PROFILES=[], DESP=[], HIST=[], CONV=[];
 const URLS={};                                  // caminho -> link assinado
-const UI={status:'carregando', tab:'lista', filtro:'todas', sheet:null, form:null, formMore:false, confirm:null, pendingDraw:false, email:'', codeSent:false};
+const UI={status:'carregando', tab:'home', mes:null, pessoa:null, filtro:'todas', sheet:null, form:null, formMore:false, confirm:null, pendingDraw:false, email:'', codeSent:false};
 
 const ME=()=>MEP&&MEP.status==='ativo'?MEP:null;
 const pName=id=>PROFILES.find(p=>p.id===id)?.nome||'—';
@@ -274,9 +284,9 @@ function draw(){
   const u=ME(), app=document.getElementById('app');
   if(!document.getElementById('view')) app.innerHTML=`<header class="top"><div class="topin"><div class="brand">implay<b>°</b><small>despesas</small></div><div class="spacer"></div><span class="lvl" id="lvl"></span><span id="ic"></span></div></header><main id="view"></main>`;
   document.getElementById('lvl').textContent=NIVEL[u.nivel];
-  const home=UI.tab==='lista';
-  document.getElementById('ic').innerHTML=`<button class="iconbtn" data-act="tab" data-tab="${home?'menu':'lista'}" aria-label="${home?'Menu':'Voltar'}" aria-pressed="${!home}">${home?ICON_USER:ICON_X}</button>`;
-  document.getElementById('view').innerHTML=(VIEWS[UI.tab]||VIEWS.lista)();
+  const home=UI.tab==='home';
+  document.getElementById('ic').innerHTML=`<button class="iconbtn" data-act="tab" data-tab="${home?'menu':'home'}" aria-label="${home?'Menu':'Voltar ao início'}" aria-pressed="${!home}">${home?ICON_USER:ICON_X}</button>`;
+  document.getElementById('view').innerHTML=(VIEWS[UI.tab]||VIEWS.home)();
   if(UI.sheet&&!document.getElementById('sheet').hidden) openDesp(UI.sheet);
 }
 const VIEWS={};
@@ -292,36 +302,68 @@ function saldoPorPessoa(){
   return Object.entries(m).map(([k,v])=>({k,...v})).sort((a,b)=>b.total-a.total);
 }
 
-VIEWS.lista=()=>{
-  const u=ME(), canAdd=u.nivel!=='basic';
-  const ativas=DESP.filter(ativa);
-  const total=ativas.reduce((s,d)=>s+Number(d.valor),0);
-  const aReemb=DESP.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&d.reemb!=='reembolsado').reduce((s,d)=>s+Number(d.valor),0);
-  const pend=APROVACAO?DESP.filter(d=>d.aprov==='pendente'):[];
-  const saldos=saldoPorPessoa().filter(s=>s.aberto>0);
-  let js=[...DESP]; const f=UI.filtro;
-  if(f==='reemb') js=js.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&d.reemb!=='reembolsado');
-  if(f==='pend') js=js.filter(d=>d.aprov==='pendente');
-  if(f==='classificar') js=js.filter(d=>!d.categoria||!d.favorecido);
-  if(f==='empresa') js=js.filter(d=>d.origem==='empresa');
-  if(f==='recusadas') js=js.filter(d=>d.aprov==='recusada');
-  const meses=[...new Set(js.map(d=>d.data.slice(0,7)))];
-  const row=d=>{const [st,c]=status(d);const dt=pD(d.data);const n=(d.comprovantes||[]).length;return `<button class="drow s-${c}" data-desp="${d.id}">
+const VOLTAR=(to='home',label='Voltar')=>`<button class="linkbtn" data-act="tab" data-tab="${to}">‹ ${label}</button>`;
+function rowDesp(d){const [st,c]=status(d);const dt=pD(d.data);const n=(d.comprovantes||[]).length;return `<button class="drow s-${c}" data-desp="${d.id}">
     <span class="dd"><b class="num">${pad(dt.getDate())}</b><span>${MES3[dt.getMonth()]}</span></span>
     <span class="db"><span class="t">${esc(d.favorecido||d.descricao||'Gasto')}</span><span class="p">${d.favorecido&&d.descricao?esc(d.descricao)+' · ':''}${d.categoria?esc(d.categoria):'<span class="c-warn">a classificar</span>'}</span>
       <span class="pills"><span class="pill c-${c}">${st}</span><span class="pill plain c-fg">${esc(pagadorNome(d))}</span>${n?`<span class="pill plain">${ICON_CLIP} ${n}</span>`:'<span class="pill c-bad">sem comprovante</span>'}</span></span>
-    <span class="val num">${money(d.valor)}</span></button>`;};
-  return `<div><h1 class="v">Despesas</h1><div class="sub">Gastos da Implay e reembolsos dos sócios.</div></div>
-  <div class="sum">
-    <div class="tile"><span class="k">Total lançado</span><span class="v num">${money(total)}</span><span class="sub">${ativas.length} gasto${ativas.length!==1?'s':''}</span></div>
-    <button class="tile hl" data-act="tab" data-tab="reemb"><span class="k">A reembolsar</span><span class="v num">${money(aReemb)}</span><span class="sub">ver por pessoa ›</span></button>
-    ${saldos.length?`<div class="tile wide"><span class="k">Quem tem a receber</span><div class="who">${saldos.map(s=>`<div><span>${esc(s.nome)}</span><strong class="num">${money(s.aberto)}</strong></div>`).join('')}</div></div>`:''}
-  </div>
-  ${pend.length?`<button class="callout" data-act="filtro" data-f="pend" style="text-align:left">${pend.length} gasto${pend.length>1?'s':''} aguardando aprovação · ${money(pend.reduce((s,d)=>s+Number(d.valor),0))}</button>`:''}
-  ${canAdd?`<button class="btn pri big" data-act="nova">+ Lançar gasto</button>`:''}
-  <div class="chips" role="group" aria-label="Mostrar">${[['todas','Todos'],['reemb','A reembolsar'],...(APROVACAO?[['pend','Aguardando aprovação']]:[]),['classificar','A classificar'],['empresa','Conta da empresa'],...(APROVACAO?[['recusadas','Recusados']]:[])].map(([k,l])=>`<button data-act="filtro" data-f="${k}" aria-pressed="${f===k}">${l}</button>`).join('')}</div>
-  ${meses.length?meses.map(m=>{const ds=js.filter(d=>d.data.startsWith(m));const [y,mm]=m.split('-').map(Number);return `<section class="mgroup"><div class="mh"><h2>${MES[mm-1]} ${y}</h2><span class="num">${money(ds.filter(ativa).reduce((s,d)=>s+Number(d.valor),0))}</span></div>${ds.map(row).join('')}</section>`;}).join('')
-    :`<div class="panel"><p class="empty">${DESP.length?'Nenhum gasto neste filtro.':'Nenhum gasto lançado ainda.'}</p>${!DESP.length&&canAdd?'<p class="sub">Toque em "+ Lançar gasto" para registrar o primeiro. Tire a foto do comprovante na hora.</p>':''}</div>`}`;
+    <span class="val num">${money(d.valor)}</span></button>`;}
+function porMes(js){ const meses=[...new Set(js.map(d=>d.data.slice(0,7)))];
+  return meses.map(m=>{const ds=js.filter(d=>d.data.startsWith(m));const [y,mm]=m.split('-').map(Number);return `<section class="mgroup"><div class="mh"><h2>${MES[mm-1]} ${y}</h2><span class="num">${money(ds.filter(ativa).reduce((s,d)=>s+Number(d.valor),0))}</span></div>${ds.map(rowDesp).join('')}</section>`;}).join(''); }
+const aCompletar=d=>ativa(d)&&(!d.categoria||!(d.comprovantes||[]).length);
+
+const MI={
+ rec:'<path d="M12 3v18M7 8h7a3 3 0 0 1 0 6H8"/>',
+ list:'<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>',
+ chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+ tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ down:'<path d="M12 4v12M7 11l5 5 5-5M4 20h16"/>'};
+const mi=(k)=>`<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${MI[k]}</svg>`;
+
+VIEWS.home=()=>{
+  const u=ME(), canAdd=u.nivel!=='basic', adm=u.nivel==='adm';
+  const items=[['reemb','rec','Quem tem a receber','reembolso por pessoa'],['lista','list','Gastos','todos os lançamentos'],['mes','chart','Resumo do mês','quanto gastou e em quê'],['completar','tag','A completar','sem categoria ou comprovante'],['hist','clock','Histórico','quem fez o quê']];
+  return `<div class="sub">Olá, ${esc((u.nome||'').split(' ')[0])}</div>
+  ${canAdd?`<button class="launch" data-act="nova">+ Lançar gasto<span>valor · fornecedor · forma de pagamento</span></button>`:''}
+  <div class="menu">
+    ${items.map(([t,ic,ti,sub])=>`<button class="mi" data-act="tab" data-tab="${t}">${mi(ic)}<b>${ti}</b><small>${sub}</small></button>`).join('')}
+    ${adm?`<button class="mi" data-act="csv">${mi('down')}<b>Exportar</b><small>planilha para o contador</small></button>`:''}
+  </div>`;
+};
+
+VIEWS.lista=()=>{
+  let js=[...DESP]; const f=UI.filtro;
+  if(f==='reemb') js=js.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&d.reemb!=='reembolsado');
+  if(f==='pend') js=js.filter(d=>d.aprov==='pendente');
+  if(f==='empresa') js=js.filter(d=>d.origem==='empresa');
+  if(f==='recusadas') js=js.filter(d=>d.aprov==='recusada');
+  if(f==='meus') js=js.filter(d=>d.lancado_por===ME().id);
+  return `${VOLTAR()}<h1 class="v">Gastos</h1>
+  <div class="chips" role="group" aria-label="Mostrar">${[['todas','Todos'],['reemb','A reembolsar'],['meus','Lançados por mim'],...(APROVACAO?[['pend','Aguardando aprovação']]:[]),['empresa','Conta da empresa'],...(APROVACAO?[['recusadas','Recusados']]:[])].map(([k,l])=>`<button data-act="filtro" data-f="${k}" aria-pressed="${f===k}">${l}</button>`).join('')}</div>
+  ${js.length?porMes(js):`<div class="panel"><p class="empty">${DESP.length?'Nenhum gasto neste filtro.':'Nenhum gasto lançado ainda.'}</p></div>`}`;
+};
+
+VIEWS.completar=()=>{
+  const js=DESP.filter(aCompletar);
+  return `${VOLTAR()}<h1 class="v">A completar</h1><div class="sub">Gastos sem categoria ou sem comprovante. Toque para abrir e editar.</div>
+  ${js.length?porMes(js):'<div class="panel"><p class="empty">Tudo completo.</p></div>'}`;
+};
+
+VIEWS.mes=()=>{
+  const cur=UI.mes||dkey(now()).slice(0,7); const [y,m]=cur.split('-').map(Number);
+  const shift=k=>{const d=new Date(y,m-1+k,1);return `${d.getFullYear()}-${pad(d.getMonth()+1)}`;};
+  const ds=DESP.filter(d=>ativa(d)&&d.data.startsWith(cur));
+  const total=ds.reduce((s,d)=>s+Number(d.valor),0);
+  const cats={}; ds.forEach(d=>{const c=d.categoria||'A classificar';cats[c]=(cats[c]||0)+Number(d.valor);});
+  const lista=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  const quem={}; ds.forEach(d=>{const k=pagadorNome(d);quem[k]=(quem[k]||0)+Number(d.valor);});
+  const prev=shift(-1), next=shift(1), [py,pm]=prev.split('-').map(Number), [ny,nm]=next.split('-').map(Number);
+  return `${VOLTAR()}<h1 class="v">${MES[m-1]} ${y}</h1>
+  <div class="row" style="justify-content:space-between"><button class="linkbtn" data-act="mes" data-m="${prev}">‹ ${MES[pm-1]}</button><button class="linkbtn" data-act="mes" data-m="${next}">${MES[nm-1]} ›</button></div>
+  <div class="panel"><span class="sub">Total do mês</span><b class="num" style="font-family:var(--f-display);font-size:40px;line-height:1">${money(total)}</b><span class="sub">${ds.length} gasto${ds.length!==1?'s':''}</span></div>
+  ${lista.length?`<div class="panel" style="gap:10px"><h3>Por categoria</h3>${lista.map(([c,v])=>`<div class="row" style="justify-content:space-between;flex-wrap:nowrap"><span style="min-width:0">${esc(c)}</span><strong class="num">${money(v)}</strong></div>`).join('')}</div>
+  <div class="panel" style="gap:10px"><h3>Quem pagou</h3>${Object.entries(quem).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<div class="row" style="justify-content:space-between"><span>${esc(c)}</span><strong class="num">${money(v)}</strong></div>`).join('')}</div>`:'<div class="panel"><p class="empty">Nenhum gasto neste mês.</p></div>'}`;
 };
 
 // ---------- comprovantes ----------
@@ -430,7 +472,7 @@ VIEWS.form=()=>{
     <p class="err" id="d-err" hidden></p>
     <button class="btn pri big" type="submit" data-again="0">${F.id?'Salvar alterações':'Lançar gasto'}</button>
     ${F.id?'':`<button class="btn big" type="submit" data-again="1">Lançar e já fazer outro</button>`}
-    <button class="btn" type="button" data-act="tab" data-tab="lista">Cancelar</button>
+    <button class="btn" type="button" data-act="tab" data-tab="home">Cancelar</button>
   </form>`;
 };
 function readForm(){
@@ -446,10 +488,8 @@ VIEWS.menu=()=>{
   const u=ME(), adm=u.nivel==='adm', pendU=PROFILES.filter(x=>x.status==='pendente').length;
   return `<div><h1 class="v">Menu</h1><div class="sub">${esc(u.nome)} · ${esc(u.email)} · ${NIVEL[u.nivel]}</div></div>
   <div class="sum">
-    <button class="tile" data-act="tab" data-tab="reemb"><span class="k">Reembolsos</span><span class="v">Por pessoa</span><span class="sub">quanto cada um pagou e tem a receber</span></button>
-    <button class="tile" data-act="tab" data-tab="hist"><span class="k">Histórico</span><span class="v">Tudo</span><span class="sub">quem lançou, aprovou e reembolsou</span></button>
     ${adm?`<button class="tile" data-act="tab" data-tab="pessoas"><span class="k">Pessoas</span><span class="v">${ativos().length}${pendU?` <span class="c-warn">+${pendU}</span>`:''}</span><span class="sub">acessos e níveis${pendU?' · pedidos esperando':''}</span></button>
-    <button class="tile" data-act="csv"><span class="k">Exportar</span><span class="v">Planilha</span><span class="sub">CSV para o contador ou o ERP</span></button>`:''}
+`:''}
   </div>
   <section class="panel"><h3>Regras</h3>
     <ul class="sub" style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
@@ -460,23 +500,30 @@ VIEWS.menu=()=>{
   <button class="btn" data-act="logout">Sair da conta</button>`;
 };
 VIEWS.reemb=()=>{
-  const u=ME(), adm=u.nivel==='adm', ss=saldoPorPessoa();
-  return `<div><h1 class="v">Reembolsos</h1><div class="sub">Gastos pagos com dinheiro de alguém, a devolver pela empresa.</div></div>
-  ${ss.length?ss.map(s=>`<section class="panel">
-    <div class="row" style="justify-content:space-between"><h2>${esc(s.nome)}</h2><span class="bigval num" style="font-size:30px;color:var(--warn)">${money(s.aberto)}</span></div>
-    <div class="tablewrap"><table><tbody>
-      <tr><td class="sub">Pagou no total</td><td class="r num">${money(s.total)}</td></tr>
-      ${APROVACAO?`<tr><td class="sub">Aguardando aprovação</td><td class="r num">${money(s.pend)}</td></tr>`:''}
-      <tr><td class="sub">Já reembolsado</td><td class="r num c-ok">${money(s.pago)}</td></tr>
-      <tr><td><strong>A receber</strong></td><td class="r num"><strong>${money(s.aberto)}</strong></td></tr>
-    </tbody></table></div>
-    ${adm&&s.aberto>0&&s.k!==u.id?(UI.confirm==='reembAll:'+s.k?`<div class="callout">Marcar ${money(s.aberto)} como reembolsado para ${esc(s.nome)}? Faça isso depois que o dinheiro sair da conta da empresa.</div><div class="row"><button class="btn ok" data-act="reembAll" data-k="${esc(s.k)}">Confirmar reembolso</button><button class="btn" data-act="cancelc">Voltar</button></div>`:`<button class="btn ok" data-act="reembAllA" data-k="${esc(s.k)}">Registrar reembolso de tudo</button>`):''}
-    ${adm&&s.aberto>0&&s.k===u.id?'<p class="sub" style="margin:0">O seu reembolso é registrado por outro ADM.</p>':''}
-  </section>`).join(''):'<div class="panel"><p class="empty">Nenhum reembolso ainda.</p></div>'}`;
+  const ss=saldoPorPessoa().filter(x=>x.aberto>0), tot=ss.reduce((a,x)=>a+x.aberto,0);
+  return `${VOLTAR()}<h1 class="v">Quem tem a receber</h1>
+  ${ss.length?`<div class="panel" style="gap:0">${ss.map(x=>{const n=DESP.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&d.reemb!=='reembolsado'&&(d.pagador_id||('outro:'+(d.pagador_nome||'Outra pessoa')))===x.k).length;return `<button class="prow" data-act="pessoa" data-k="${esc(x.k)}"><span><strong>${esc(x.nome)}</strong><span class="sub" style="display:block">${n} gasto${n!==1?'s':''}</span></span><b class="num">${money(x.aberto)}</b></button>`;}).join('')}</div>
+  <div class="row" style="justify-content:space-between"><span class="sub">Total a reembolsar</span><b class="num" style="font-family:var(--f-display);font-size:26px">${money(tot)}</b></div>`
+  :'<div class="panel"><p class="empty">Ninguém tem reembolso a receber.</p></div>'}
+  <button class="linkbtn" data-act="tab" data-tab="reembPagos">Ver reembolsos já pagos</button>`;
+};
+VIEWS.pessoa=()=>{
+  const u=ME(), adm=u.nivel==='adm', k=UI.pessoa;
+  const s0=saldoPorPessoa().find(x=>x.k===k)||{nome:'—',aberto:0,pago:0,total:0};
+  const js=DESP.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&d.reemb!=='reembolsado'&&(d.pagador_id||('outro:'+(d.pagador_nome||'Outra pessoa')))===k);
+  return `${VOLTAR('reemb')}<h1 class="v">${esc(s0.nome)}</h1>
+  <div class="panel"><span class="sub">A receber</span><b class="num" style="font-family:var(--f-display);font-size:40px;line-height:1;color:var(--warn)">${money(s0.aberto)}</b><span class="sub">Já reembolsado: ${money(s0.pago)} · Pagou no total: ${money(s0.total)}</span></div>
+  ${adm&&s0.aberto>0&&k!==u.id?(UI.confirm==='reembAll:'+k?`<div class="callout">Marcar ${money(s0.aberto)} como reembolsado para ${esc(s0.nome)}? Faça isso depois que o dinheiro sair da conta da empresa.</div><div class="row"><button class="btn ok" data-act="reembAll" data-k="${esc(k)}">Confirmar reembolso</button><button class="btn" data-act="cancelc">Voltar</button></div>`:`<button class="btn ok big" data-act="reembAllA" data-k="${esc(k)}">Registrar reembolso</button>`):''}
+  ${adm&&s0.aberto>0&&k===u.id?'<p class="sub" style="margin:0">O seu reembolso é registrado por outro ADM.</p>':''}
+  ${js.length?porMes(js):''}`;
+};
+VIEWS.reembPagos=()=>{
+  const js=DESP.filter(d=>d.reemb==='reembolsado');
+  return `${VOLTAR('reemb')}<h1 class="v">Reembolsos pagos</h1>${js.length?porMes(js):'<div class="panel"><p class="empty">Nenhum reembolso pago ainda.</p></div>'}`;
 };
 VIEWS.pessoas=()=>{
   const me=ME();
-  return `<div><h1 class="v">Pessoas</h1><div class="sub">Quem acessa e com qual nível.</div></div>
+  return `${VOLTAR('menu','Menu')}<div><h1 class="v">Pessoas</h1><div class="sub">Quem acessa e com qual nível.</div></div>
   ${PROFILES.filter(p=>p.status==='pendente').map(p=>`<section class="panel"><h3>${esc(p.email)} pediu acesso</h3><div class="row"><select class="btn" id="lv-${p.id}" aria-label="Nível"><option value="basic">Basic</option><option value="manager">Manager</option><option value="adm">ADM</option></select><button class="btn pri" data-act="libera" data-id="${p.id}">Liberar</button><button class="btn danger" data-act="bloq" data-id="${p.id}">Recusar</button></div></section>`).join('')}
   <section class="panel"><h3>Com acesso</h3><div class="tablewrap"><table><thead><tr><th>Nome</th><th>E-mail</th><th>Nível</th><th></th></tr></thead><tbody>
   ${PROFILES.filter(p=>p.status!=='pendente').map(p=>`<tr><td>${esc(p.nome)}</td><td class="mono">${esc(p.email)}</td><td><select class="btn sm" data-nivel="${p.id}" ${p.id===me.id?'disabled':''} aria-label="Nível de ${esc(p.nome)}">${Object.entries(NIVEL).map(([k,l])=>`<option value="${k}" ${p.nivel===k?'selected':''}>${l}</option>`).join('')}</select></td><td>${p.id===me.id?'<span class="sub">você</span>':p.status==='ativo'?`<button class="btn sm danger" data-act="bloq" data-id="${p.id}">Bloquear</button>`:`<button class="btn sm" data-act="libera" data-id="${p.id}">Desbloquear</button>`}</td></tr>`).join('')}
@@ -493,7 +540,7 @@ VIEWS.pessoas=()=>{
 VIEWS.hist=()=>{
   if(!VIEWS.hist.loaded){ VIEWS.hist.loaded=true; loadHist().then(redraw); }
   const nomeDesp=id=>{const d=DESP.find(x=>x.id===id);return d?(d.favorecido||d.descricao||'gasto'):'';};
-  return `<div><h1 class="v">Histórico</h1><div class="sub">Gravado pelo próprio banco. Ninguém edita nem apaga.</div></div>
+  return `${VOLTAR()}<div><h1 class="v">Histórico</h1><div class="sub">Gravado pelo próprio banco. Ninguém edita nem apaga.</div></div>
   <section class="panel">${HIST.length?`<ul class="log">${HIST.map(h=>`<li><time>${brTs(h.em)}</time><span><strong>${esc(pName(h.quem))}</strong> ${esc(h.acao)}${h.despesa_id&&DESP.some(d=>d.id===h.despesa_id)?` · <button class="btn sm" data-desp="${h.despesa_id}">${esc(nomeDesp(h.despesa_id))}</button>`:''}</span></li>`).join('')}</ul>`:'<p class="empty">Carregando…</p>'}</section>`;
 };
 
@@ -519,6 +566,8 @@ document.addEventListener('click',async e=>{
     case 'logout': await sb.auth.signOut(); location.reload(); return;
     case 'tab': UI.tab=t.dataset.tab; UI.confirm=null; closeSheet(); draw(); window.scrollTo(0,0); return;
     case 'filtro': UI.filtro=t.dataset.f; UI.tab='lista'; draw(); return;
+    case 'mes': UI.mes=t.dataset.m; draw(); return;
+    case 'pessoa': UI.pessoa=t.dataset.k; UI.confirm=null; UI.tab='pessoa'; draw(); window.scrollTo(0,0); return;
     case 'nova': UI.formMore=false; openForm(null); return;
     case 'more': readForm(); UI.formMore=!UI.formMore; draw(); return;
     case 'close': closeSheet(); return;
@@ -578,7 +627,7 @@ document.addEventListener('submit',async e=>{
     const again=e.submitter&&e.submitter.dataset.again==='1';
     await loadAll();
     if(again){ const keep={pagador_id:row.pagador_id,pagador_nome:row.pagador_nome,origem:row.origem,data:row.data,forma:row.forma}; openForm(null); Object.assign(UI.form,keep); draw(); }
-    else { UI.form=null; UI.tab='lista'; draw(); }
+    else { UI.form=null; UI.tab='home'; draw(); }
     window.scrollTo(0,0); return;
   }
   if(f.id==='frec'){ const mot=document.getElementById('r-mot').value.trim(); if(!mot) return; UI.confirm=null; if(await upd(f.dataset.id,{aprov:'recusada',motivo:mot},'Gasto recusado')) openDesp(f.dataset.id); return; }
