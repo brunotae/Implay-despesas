@@ -218,13 +218,13 @@ async function boot(){
   if(!window.supabase){ UI.status='offline'; draw(); return; }
   sb=window.supabase.createClient(CFG_.SUPABASE_URL,CFG_.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   const {data}=await sb.auth.getSession(); SESSION=data.session;
-  sb.auth.onAuthStateChange((ev,s)=>{ const had=!!SESSION; SESSION=s; if(!!s!==had) start(); });
+  sb.auth.onAuthStateChange((ev,s)=>{ const had=!!SESSION; SESSION=s; if(ev==='PASSWORD_RECOVERY'){ UI.lmode='novasenha'; UI.aviso=''; UI.status='login'; draw(); return; } if(!!s!==had&&UI.lmode!=='novasenha') start(); });
   start();
   document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&ME()) scheduleReload(); });
 }
 let channel=null;
 async function start(){
-  if(!SESSION){ MEP=null; UI.status='login'; draw(); return; }
+  if(!SESSION||UI.lmode==='novasenha'){ MEP=null; UI.status='login'; draw(); return; }
   UI.status='carregando'; draw();
   try{
     const me=await sb.from('profiles').select('*').eq('id',SESSION.user.id).maybeSingle();
@@ -245,15 +245,16 @@ function drawOuter(){
   if(st==='offline'){ app.innerHTML=gate('despesas','<div class="callout">Sem conexão. Confira a internet e abra de novo.</div>'); return true; }
   if(st==='erro'){ app.innerHTML=gate('despesas',`<div class="callout">Não consegui carregar os dados: ${esc(UI.erro||'erro desconhecido')}. Confira se o schema.sql foi rodado no Supabase.</div><button class="btn" data-act="reload">Tentar de novo</button>`); return true; }
   if(st==='login'){
-    app.innerHTML=gate('despesas', UI.codeSent?
-      `<p class="sub">Enviamos um código para <strong>${esc(UI.email)}</strong>. Digite abaixo ou toque no link do e-mail.</p>
-       <form class="panel" id="fcode"><label class="f"><span>Código</span><input id="l-code" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="8" required></label>
-       <p class="err" id="l-err" hidden></p><button class="btn pri big" type="submit">Entrar</button>
-       <button class="linkbtn" type="button" data-act="trocaemail">Usar outro e-mail</button></form>`
-      :`<p class="sub">Gastos da Implay e reembolsos dos sócios.</p>
-       <form class="panel" id="flogin"><label class="f"><span>Seu e-mail</span><input id="l-email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" value="${esc(UI.email)}" required></label>
-       <p class="err" id="l-err" hidden></p><button class="btn pri big" type="submit">Receber código de acesso</button>
-       <p class="sub" style="margin:0">Sem senha: a cada login chega um código no seu e-mail.</p></form>`);
+    const m=UI.lmode||'senha', em=`<label class="f"><span>E-mail</span><input id="l-email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" value="${esc(UI.email)}" required></label>`;
+    const err='<p class="err" id="l-err" hidden></p>';
+    const links=`<div class="row" style="justify-content:space-between">${m!=='senha'?'<button class="linkbtn" type="button" data-lmode="senha">Entrar com senha</button>':'<button class="linkbtn" type="button" data-lmode="criar">Criar conta</button>'}${m==='senha'?'<button class="linkbtn" type="button" data-lmode="esqueci">Esqueci a senha</button>':''}</div>`;
+    let body='';
+    if(UI.aviso) body=`<div class="callout ok">${UI.aviso}</div><button class="btn" data-lmode="senha">Voltar para o login</button>`;
+    else if(m==='senha') body=`<form class="panel" id="fsenha">${em}<label class="f"><span>Senha</span><input id="l-senha" type="password" autocomplete="current-password" required></label>${err}<button class="btn pri big" type="submit">Entrar</button>${links}</form>`;
+    else if(m==='criar') body=`<form class="panel" id="fcriar"><h3>Criar conta</h3>${em}<label class="f"><span>Crie uma senha</span><input id="l-senha" type="password" autocomplete="new-password" minlength="6" required><small>Pelo menos 6 caracteres.</small></label>${err}<button class="btn pri big" type="submit">Criar conta</button>${links}</form>`;
+    else if(m==='esqueci') body=`<form class="panel" id="fesqueci"><h3>Esqueci a senha</h3><p class="sub" style="margin:0">Enviamos um link para você criar uma senha nova.</p>${em}${err}<button class="btn pri big" type="submit">Enviar link</button>${links}</form>`;
+    else if(m==='novasenha') body=`<form class="panel" id="fnova"><h3>Senha nova</h3><label class="f"><span>Nova senha</span><input id="l-senha" type="password" autocomplete="new-password" minlength="6" required></label>${err}<button class="btn pri big" type="submit">Salvar e entrar</button></form>`;
+    app.innerHTML=gate('despesas',`<p class="sub">Gastos da Implay e reembolsos dos sócios.</p>${body}`);
     return true;
   }
   if(st==='pendente'){ app.innerHTML=gate('aguarde',`<div class="callout">Sua conta (${esc(SESSION.user.email)}) foi criada e está esperando um ADM liberar.</div><div class="row"><button class="btn" data-act="reload">Já liberaram? Atualizar</button><button class="btn" data-act="logout">Sair</button></div>`); return true; }
@@ -506,8 +507,9 @@ document.addEventListener('change',async e=>{
 });
 document.addEventListener('focusout',()=>setTimeout(()=>{ if(UI.pendingDraw&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('form'))) draw(); },0));
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-act],[data-desp],[data-quem],[data-dia]');
+  const t=e.target.closest('[data-act],[data-desp],[data-quem],[data-dia],[data-lmode]');
   if(!t){ if(e.target.id==='sheet') closeSheet(); return; }
+  if(t.dataset.lmode){ const el=document.getElementById('l-email'); if(el) UI.email=el.value.trim(); UI.lmode=t.dataset.lmode; UI.aviso=''; draw(); return; }
   if(t.dataset.quem){ readForm(); const k=t.dataset.quem; if(k==='empresa'){UI.form.origem='empresa';} else {UI.form.origem='pessoal'; UI.form.pagador_id=k==='outro'?null:k;} draw(); return; }
   if(t.dataset.dia){ readForm(); UI.form.data=t.dataset.dia; const di=document.getElementById('d-data'); if(di) di.value=t.dataset.dia; draw(); return; }
   if(t.dataset.desp&&!t.dataset.act){ UI.confirm=null; openDesp(t.dataset.desp); return; }
@@ -515,7 +517,6 @@ document.addEventListener('click',async e=>{
   switch(a){
     case 'reload': location.reload(); return;
     case 'logout': await sb.auth.signOut(); location.reload(); return;
-    case 'trocaemail': UI.codeSent=false; draw(); return;
     case 'tab': UI.tab=t.dataset.tab; UI.confirm=null; closeSheet(); draw(); window.scrollTo(0,0); return;
     case 'filtro': UI.filtro=t.dataset.f; UI.tab='lista'; draw(); return;
     case 'nova': UI.formMore=false; openForm(null); return;
@@ -546,19 +547,20 @@ document.addEventListener('click',async e=>{
 });
 document.addEventListener('submit',async e=>{
   e.preventDefault(); const f=e.target, me=ME();
-  if(f.id==='flogin'){
-    const email=document.getElementById('l-email').value.trim().toLowerCase(), err=document.getElementById('l-err');
-    if(!email.includes('@')){err.textContent='Digite um e-mail válido.';err.hidden=false;return;}
-    const btn=f.querySelector('button[type=submit]'); btn.disabled=true; btn.textContent='Enviando…';
-    const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+location.pathname}});
-    btn.disabled=false; btn.textContent='Receber código de acesso';
-    if(error){ err.textContent=/rate|seconds/i.test(error.message)?'Muitos pedidos seguidos. Espere um minuto e tente de novo.':error.message; err.hidden=false; return; }
-    UI.email=email; UI.codeSent=true; draw(); return;
-  }
-  if(f.id==='fcode'){
-    const token=document.getElementById('l-code').value.replace(/\D/g,''), err=document.getElementById('l-err');
-    const {error}=await sb.auth.verifyOtp({email:UI.email,token,type:'email'});
-    if(error){ err.textContent='Código inválido ou vencido. Peça outro.'; err.hidden=false; } return;
+  if(['fsenha','fcriar','fesqueci','fnova'].includes(f.id)){
+    const err=document.getElementById('l-err'), fail=m=>{err.textContent=m;err.hidden=false;};
+    const email=(document.getElementById('l-email')?.value||'').trim().toLowerCase(), senha=document.getElementById('l-senha')?.value||'';
+    if(f.id!=='fnova'&&!email.includes('@')) return fail('Digite um e-mail válido.');
+    if((f.id==='fcriar'||f.id==='fnova')&&senha.length<6) return fail('A senha precisa ter pelo menos 6 caracteres.');
+    UI.email=email; const btn=f.querySelector('button[type=submit]'); btn.disabled=true;
+    const back=location.origin+location.pathname, tr=m=>/rate|seconds|security purposes/i.test(m)?'Muitos pedidos seguidos. Espere um minuto e tente de novo.':m;
+    try{
+      if(f.id==='fsenha'){ const {error}=await sb.auth.signInWithPassword({email,password:senha}); if(error) return fail(/confirm/i.test(error.message)?'Falta confirmar o e-mail: toque no link que enviamos na criação da conta.':/invalid/i.test(error.message)?'E-mail ou senha não conferem.':tr(error.message)); return; }
+      if(f.id==='fcriar'){ const {data,error}=await sb.auth.signUp({email,password:senha,options:{emailRedirectTo:back}}); if(error) return fail(/registered|exists/i.test(error.message)?'Esse e-mail já tem conta. Use "Entrar com senha" ou "Esqueci a senha".':tr(error.message));
+        if(!data.session){ UI.aviso=`Conta criada. Enviamos um link de confirmação para <strong>${esc(email)}</strong>. Toque nele, volte aqui e entre com e-mail e senha.`; draw(); } return; }
+      if(f.id==='fesqueci'){ const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:back}); if(error) return fail(tr(error.message)); UI.aviso=`Se existir conta para <strong>${esc(email)}</strong>, chegou um link no e-mail. Toque nele para criar a senha nova.`; draw(); return; }
+      if(f.id==='fnova'){ const {error}=await sb.auth.updateUser({password:senha}); if(error) return fail(tr(error.message)); UI.lmode='senha'; toast('Senha alterada'); start(); return; }
+    } finally { btn.disabled=false; }
   }
   if(f.id==='fdesp'){
     readForm(); const F=UI.form, err=document.getElementById('d-err'), fail=m=>{err.textContent=m;err.hidden=false;err.scrollIntoView({block:'center'});};
