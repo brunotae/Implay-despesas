@@ -27,7 +27,7 @@
 [hidden]{display:none!important}
 html,body{margin:0;min-height:100%}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 img{max-width:100%}
@@ -37,29 +37,29 @@ img{max-width:100%}
 
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
 .topin{max-width:760px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
-.brand{font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1}
+.brand{font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1}
 .brand b{color:var(--lime)}
 .brand small{font-family:var(--f-body);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-left:8px}
 .spacer{flex:1}
-.iconbtn{background:var(--panel);border:1px solid var(--line);border-radius:50%;width:44px;height:44px;display:grid;place-items:center;color:var(--fg);flex:none}
+.iconbtn{background:var(--panel);border:1px solid var(--line);border-radius:50%;width:38px;height:38px;display:grid;place-items:center;color:var(--fg);flex:none}
 .iconbtn[aria-pressed="true"]{background:var(--lime);color:var(--ink);border-color:var(--lime)}
 .lvl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);background:var(--lime);border-radius:4px;padding:2px 6px;font-weight:700}
 
-main{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:18px 80px;display:flex;flex-direction:column;gap:16px}
-h1.v{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,8vw,40px);line-height:1;text-transform:uppercase;margin:0}
-h2{font-family:var(--f-display);font-weight:700;font-size:21px;letter-spacing:.02em;text-transform:uppercase;margin:0}
-h3{font-size:15px;margin:0}
-.sub{color:var(--muted);font-size:14px}
+main{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:14px 70px;display:flex;flex-direction:column;gap:13px}
+h1.v{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,6vw,30px);line-height:1;text-transform:uppercase;margin:0}
+h2{font-family:var(--f-display);font-weight:700;font-size:17px;letter-spacing:.02em;text-transform:uppercase;margin:0}
+h3{font-size:14px;margin:0}
+.sub{color:var(--muted);font-size:13px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.btn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-weight:600;min-height:44px}
+.btn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-weight:600;min-height:40px;font-size:13px}
 .btn.pri{background:var(--lime);color:var(--ink);border-color:var(--lime)}
 .btn.danger{color:var(--bad);border-color:#5a2c25}
 .btn.ok{color:var(--ok);border-color:#2d5a3e}
 .btn.sm{min-height:34px;padding:6px 10px;font-size:13px}
-.btn.big{width:100%;min-height:54px;font-size:16px;border-radius:12px}
+.btn.big{width:100%;min-height:46px;font-size:14px;border-radius:12px}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .linkbtn{background:none;border:0;color:var(--lime);font-weight:600;padding:4px 0;text-align:left;align-self:flex-start}
-.panel{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:13px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .empty{color:var(--muted);font-size:14px;margin:0}
 .callout{border:1px solid #5a4520;background:rgba(243,182,76,.07);border-radius:10px;padding:10px 12px;font-size:14px;color:#f6d79b}
 .callout.ok{border-color:#3d5a2a;background:rgba(127,224,166,.07);color:#bff0d2}
@@ -67,7 +67,7 @@ h3{font-size:15px;margin:0}
 .sum{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:2px;text-align:left;min-width:0}
 .tile .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.tile .v{font-family:var(--f-display);font-weight:800;font-size:clamp(20px,6.4vw,28px);white-space:nowrap;line-height:1.1}
+.tile .v{font-family:var(--f-display);font-weight:800;font-size:clamp(18px,5.4vw,24px);white-space:nowrap;line-height:1.1}
 .tile.hl .v{color:var(--warn)}
 .tile.wide{grid-column:1/-1}
 .who{display:flex;flex-direction:column;gap:6px;margin-top:6px}
@@ -76,40 +76,40 @@ h3{font-size:15px;margin:0}
 .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chips.wrap{flex-wrap:wrap;overflow:visible}
-.chips button{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-weight:600;color:var(--muted);min-height:40px;white-space:nowrap}
+.chips button{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-weight:600;font-size:13px;color:var(--muted);min-height:34px;white-space:nowrap}
 .chips button[aria-pressed="true"]{background:var(--lime);border-color:var(--lime);color:var(--ink)}
-.datechip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 12px;min-height:40px;color:var(--fg)}
+.datechip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 10px;min-height:34px;font-size:13px;color:var(--fg)}
 
 .mgroup{display:flex;flex-direction:column;gap:8px}
 .mh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .mh span{color:var(--muted);font-size:14px}
-.drow{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:start;text-align:left;width:100%;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--st,var(--muted));border-radius:12px;padding:12px;min-width:0}
+.drow{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:start;text-align:left;width:100%;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--st,var(--muted));border-radius:12px;padding:12px;min-width:0}
 .drow .dd{display:flex;flex-direction:column;align-items:center;line-height:1}
-.drow .dd b{font-family:var(--f-display);font-weight:800;font-size:26px}
+.drow .dd b{font-family:var(--f-display);font-weight:800;font-size:21px}
 .drow .dd span{font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
 .drow .db{display:flex;flex-direction:column;gap:3px;min-width:0}
-.drow .t{font-weight:700;font-size:15px;overflow-wrap:anywhere}
-.drow .p{color:var(--muted);font-size:13px;overflow-wrap:anywhere}
-.drow .val{font-family:var(--f-display);font-weight:700;font-size:20px;white-space:nowrap}
+.drow .t{font-weight:700;font-size:14px;overflow-wrap:anywhere}
+.drow .p{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.drow .val{font-family:var(--f-display);font-weight:700;font-size:17px;white-space:nowrap}
 .pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}
-.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:12px;font-weight:600;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:1px 7px;font-size:11px;font-weight:600;color:var(--muted)}
 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
 .pill.plain::before{display:none}
 .c-ok{color:var(--ok)} .c-warn{color:var(--warn)} .c-bad{color:var(--bad)} .c-info{color:var(--info)} .c-fg{color:var(--fg)}
 .s-ok{--st:var(--ok)} .s-warn{--st:var(--warn)} .s-bad{--st:var(--bad)} .s-info{--st:var(--info)}
 
-form{display:flex;flex-direction:column;gap:14px;margin:0}
+form{display:flex;flex-direction:column;gap:12px;margin:0}
 .f{display:flex;flex-direction:column;gap:6px;min-width:0}
-.f > span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.f input,.f select,.f textarea{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;min-height:48px;width:100%}
+.f > span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.f input,.f select,.f textarea{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;min-height:42px;font-size:14px;width:100%}
 .f textarea{min-height:76px;resize:vertical}
 .f small{color:var(--muted);font-size:12px}
-.f input.money{font-family:var(--f-display);font-weight:700;font-size:30px;min-height:60px}
+.f input.money{font-family:var(--f-display);font-weight:700;font-size:24px;min-height:50px}
 .f input.code{font-family:var(--f-mono);font-size:26px;letter-spacing:.3em;text-align:center}
 .fr{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 .err{color:var(--bad);font-size:13px;font-weight:600;margin:0}
-.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
-.file{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel2);aspect-ratio:1;display:grid;place-items:center;font-size:12px;color:var(--muted);text-align:center;padding:6px;max-width:100%}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
+.file{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel2);aspect-ratio:1;font-size:11px;display:grid;place-items:center;font-size:12px;color:var(--muted);text-align:center;padding:6px;max-width:100%}
 .file img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .file .rm{position:absolute;top:4px;right:4px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.7);color:#fff;z-index:2}
 .file.up{border-style:dashed;color:var(--lime);font-weight:600;cursor:pointer}
@@ -121,8 +121,8 @@ form{display:flex;flex-direction:column;gap:14px;margin:0}
 @media (min-width:700px){.sheet{align-items:center}.sheetin{border-radius:16px;padding:22px}}
 .shh{display:flex;gap:10px;align-items:flex-start}
 .shh > div{flex:1;min-width:0}
-.bigval{font-family:var(--f-display);font-weight:800;font-size:40px;line-height:1}
-.kv{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;font-size:14px;margin:0}
+.bigval{font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:5px 12px;font-size:13px;margin:0}
 .kv dt{color:var(--muted)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px}
 .log li{display:grid;grid-template-columns:auto 1fr;gap:10px}
@@ -133,18 +133,18 @@ th{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute
 td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 .r{text-align:right}
 .gate{max-width:440px;margin:0 auto;padding-inline:16px;padding-block:10vh 40px;display:flex;flex-direction:column;gap:16px}
-.gate .hero{font-family:var(--f-display);font-weight:800;font-size:46px;line-height:.95;text-transform:uppercase}
+.gate .hero{font-family:var(--f-display);font-weight:800;font-size:38px;line-height:.95;text-transform:uppercase}
 .gate .hero b{color:var(--lime);display:block}
-.launch{width:100%;min-height:150px;border-radius:18px;background:var(--lime);color:var(--ink);border:0;font-family:var(--f-display);font-weight:800;font-size:34px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
-.launch span{font-family:var(--f-body);font-size:13px;font-weight:600;text-transform:none;opacity:.7}
+.launch{width:100%;min-height:118px;border-radius:16px;background:var(--lime);color:var(--ink);border:0;font-family:var(--f-display);font-weight:800;font-size:27px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.launch span{font-family:var(--f-body);font-size:12px;font-weight:600;text-transform:none;opacity:.7}
 .menu{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:8px;min-height:116px;color:var(--fg)}
+.mi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:left;display:flex;flex-direction:column;gap:6px;min-height:94px;color:var(--fg)}
 .mi svg{color:var(--lime)}
-.mi b{font-size:15px}
-.mi small{color:var(--muted);font-size:12px;line-height:1.3}
-.prow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border:0;border-bottom:1px solid var(--line);background:none;width:100%;text-align:left;color:var(--fg)}
+.mi b{font-size:13px}
+.mi small{color:var(--muted);font-size:11px;line-height:1.3}
+.prow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border:0;border-bottom:1px solid var(--line);background:none;width:100%;text-align:left;color:var(--fg)}
 .prow:last-child{border-bottom:0}
-.prow b{font-family:var(--f-display);font-size:24px;color:var(--warn);white-space:nowrap}
+.prow b{font-family:var(--f-display);font-size:19px;color:var(--warn);white-space:nowrap}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--lime);color:var(--ink);font-weight:700;padding:11px 16px;border-radius:10px;z-index:60;max-width:calc(100% - 32px);box-shadow:0 8px 30px rgba(0,0,0,.5)}
 .toast.bad{background:var(--bad);color:#1a0d0a}
 @media (max-width:420px){.brand small{display:none}}
@@ -184,7 +184,7 @@ const ICON_CLIP='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" str
 // ===================== estado =====================
 const CFG_=window.IMPLAY_CONFIG||{};
 let sb=null, SESSION=null, MEP=null;          // MEP = meu perfil
-let PROFILES=[], DESP=[], HIST=[], CONV=[];
+let PROFILES=[], DESP=[], HIST=[], CONV=[], REEMB=[], COVER={};
 const URLS={};                                  // caminho -> link assinado
 const UI={status:'carregando', tab:'home', mes:null, pessoa:null, filtro:'todas', sheet:null, form:null, formMore:false, confirm:null, pendingDraw:false, email:'', codeSent:false};
 
@@ -192,10 +192,22 @@ const ME=()=>MEP&&MEP.status==='ativo'?MEP:null;
 const pName=id=>PROFILES.find(p=>p.id===id)?.nome||'—';
 const ativos=()=>PROFILES.filter(p=>p.status==='ativo');
 const pagadorNome=d=>d.origem==='empresa'?'Conta da empresa':(d.pagador_id?pName(d.pagador_id):(d.pagador_nome||'Outra pessoa'));
+const norm=t=>String(t||'').trim().toLowerCase();
+// chave única de pessoa: conta (id) ou nome (para quem ainda não entrou)
+function pKey(id,nome){ if(id) return 'id:'+id; const p=PROFILES.find(x=>norm(x.nome)===norm(nome)&&norm(nome)); return p?'id:'+p.id:'nome:'+(norm(nome)||'outra pessoa'); }
+const keyD=d=>pKey(d.pagador_id,d.pagador_nome), keyR=r=>pKey(r.pessoa_id,r.pessoa_nome);
+function nomeK(k){ if(k.startsWith('id:')) return pName(k.slice(3)); const n=k.slice(5); const c=CONV.find(x=>norm(x.nome)===n); if(c) return c.nome; const d=DESP.find(x=>!x.pagador_id&&norm(x.pagador_nome)===n); return d?d.pagador_nome:(n||'Outra pessoa'); }
+// pessoas que aparecem em "Quem pagou": contas ativas + liberados que ainda não entraram
+function pessoasLista(){ const me=ME(); const a=ativos().slice().sort((x,y)=>(y.id===me.id)-(x.id===me.id)).map(p=>({k:'id:'+p.id,nome:p.nome}));
+  CONV.filter(c=>!PROFILES.some(p=>norm(p.email)===norm(c.email))&&!a.some(x=>norm(x.nome)===norm(c.nome))).forEach(c=>a.push({k:'nome:'+norm(c.nome),nome:c.nome})); return a; }
+// quais gastos já foram cobertos pelos pagamentos (do mais antigo para o mais novo)
+function calcCover(){ COVER={}; const pago={}; REEMB.forEach(r=>{const k=keyR(r);pago[k]=(pago[k]||0)+Number(r.valor);});
+  const por={}; DESP.filter(d=>d.origem==='pessoal'&&ativa(d)&&d.aprov!=='pendente').forEach(d=>{(por[keyD(d)]=por[keyD(d)]||[]).push(d);});
+  Object.entries(por).forEach(([k,ds])=>{ let rest=pago[k]||0; ds.sort((a,b)=>(a.data+a.criado_em).localeCompare(b.data+b.criado_em)).forEach(d=>{ const v=Number(d.valor); if(rest>=v-0.004){COVER[d.id]='ok';rest-=v;} else if(rest>0.004){COVER[d.id]='parcial';rest=0;} else COVER[d.id]='aberto'; }); }); }
 function status(d){
   if(d.aprov==='pendente') return ['Aguardando aprovação','warn'];
   if(d.aprov==='recusada') return ['Recusada','bad'];
-  if(d.origem==='pessoal') return d.reemb==='reembolsado'?['Reembolsado','ok']:['A reembolsar','info'];
+  if(d.origem==='pessoal') return COVER[d.id]==='ok'?['Reembolsado','ok']:COVER[d.id]==='parcial'?['Reembolso parcial','info']:['A reembolsar','info'];
   return ['Aprovada','ok'];
 }
 const ativa=d=>d.aprov!=='recusada';
@@ -204,13 +216,15 @@ function dbErr(e,fallback){ const m=(e&&e.message)||''; toast(m&&!/fetch|network
 
 // ===================== dados =====================
 async function loadAll(){
-  const [p,d]=await Promise.all([
+  const [p,d,r,c]=await Promise.all([
     sb.from('profiles').select('*').order('nome'),
-    sb.from('despesas').select('*').order('data',{ascending:false}).order('criado_em',{ascending:false}).limit(5000)
+    sb.from('despesas').select('*').order('data',{ascending:false}).order('criado_em',{ascending:false}).limit(5000),
+    sb.from('reembolsos').select('*').order('data',{ascending:false}).order('criado_em',{ascending:false}).limit(5000),
+    sb.from('convites').select('*').order('nome')
   ]);
   if(p.error||d.error) throw (p.error||d.error);
-  PROFILES=p.data; DESP=d.data; MEP=PROFILES.find(x=>x.id===SESSION.user.id)||MEP;
-  if(ME()?.nivel==='adm'){ const c=await sb.from('convites').select('*').order('nome'); CONV=c.data||[]; }
+  PROFILES=p.data; DESP=d.data; REEMB=r.error?[]:(r.data||[]); CONV=c.error?[]:(c.data||[]); MEP=PROFILES.find(x=>x.id===SESSION.user.id)||MEP;
+  calcCover();
 }
 async function loadHist(){ const h=await sb.from('historico').select('*').order('em',{ascending:false}).limit(400); HIST=h.data||[]; }
 async function signUrls(paths){
@@ -244,7 +258,7 @@ async function start(){
     if(!MEP){ UI.status='semperfil'; draw(); return; }
     if(MEP.status!=='ativo'){ UI.status=MEP.status; draw(); return; }
     await loadAll(); UI.status='ok'; draw();
-    if(!channel){ channel=sb.channel('implay-despesas').on('postgres_changes',{event:'*',schema:'public',table:'despesas'},scheduleReload).on('postgres_changes',{event:'*',schema:'public',table:'profiles'},scheduleReload).subscribe(); }
+    if(!channel){ channel=sb.channel('implay-despesas').on('postgres_changes',{event:'*',schema:'public',table:'despesas'},scheduleReload).on('postgres_changes',{event:'*',schema:'public',table:'profiles'},scheduleReload).on('postgres_changes',{event:'*',schema:'public',table:'reembolsos'},scheduleReload).subscribe(); }
   }catch(e){ UI.status='erro'; UI.erro=e.message; draw(); }
 }
 
@@ -279,6 +293,7 @@ function drawOuter(){
 function redraw(){ const el=document.activeElement; if(el&&el.closest&&el.closest('#view form, #sheetin form')&&['INPUT','TEXTAREA','SELECT'].includes(el.tagName)){UI.pendingDraw=true;return;} draw(); }
 function draw(){
   if(UI.tab==='form'&&UI.form&&document.getElementById('fdesp')) readForm();
+  if(UI.tab==='pagar'&&UI.pform&&document.getElementById('fpag')) readPForm();
   UI.pendingDraw=false;
   if(drawOuter()){ closeSheet(); return; }
   const u=ME(), app=document.getElementById('app');
@@ -292,14 +307,11 @@ function draw(){
 const VIEWS={};
 
 function saldoPorPessoa(){
-  const m={};
-  DESP.filter(d=>d.origem==='pessoal'&&d.aprov!=='recusada').forEach(d=>{
-    const k=d.pagador_id||('outro:'+(d.pagador_nome||'Outra pessoa'));
-    m[k]=m[k]||{nome:pagadorNome(d),total:0,pago:0,aberto:0,pend:0};
-    const v=Number(d.valor); m[k].total+=v;
-    if(d.aprov==='pendente') m[k].pend+=v; else if(d.reemb==='reembolsado') m[k].pago+=v; else m[k].aberto+=v;
-  });
-  return Object.entries(m).map(([k,v])=>({k,...v})).sort((a,b)=>b.total-a.total);
+  const m={}; const get=k=>m[k]=m[k]||{k,nome:nomeK(k),total:0,pago:0,aberto:0,abertos:0};
+  DESP.filter(d=>d.origem==='pessoal'&&ativa(d)&&d.aprov!=='pendente').forEach(d=>{const x=get(keyD(d));x.total+=Number(d.valor);if(COVER[d.id]!=='ok')x.abertos++;});
+  REEMB.forEach(r=>{get(keyR(r)).pago+=Number(r.valor);});
+  Object.values(m).forEach(x=>{x.aberto=Math.round((x.total-x.pago)*100)/100;});
+  return Object.values(m).sort((a,b)=>b.aberto-a.aberto);
 }
 
 const VOLTAR=(to='home',label='Voltar')=>`<button class="linkbtn" data-act="tab" data-tab="${to}">‹ ${label}</button>`;
@@ -334,7 +346,7 @@ VIEWS.home=()=>{
 
 VIEWS.lista=()=>{
   let js=[...DESP]; const f=UI.filtro;
-  if(f==='reemb') js=js.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&d.reemb!=='reembolsado');
+  if(f==='reemb') js=js.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&COVER[d.id]!=='ok');
   if(f==='pend') js=js.filter(d=>d.aprov==='pendente');
   if(f==='empresa') js=js.filter(d=>d.origem==='empresa');
   if(f==='recusadas') js=js.filter(d=>d.aprov==='recusada');
@@ -361,7 +373,7 @@ VIEWS.mes=()=>{
   const prev=shift(-1), next=shift(1), [py,pm]=prev.split('-').map(Number), [ny,nm]=next.split('-').map(Number);
   return `${VOLTAR()}<h1 class="v">${MES[m-1]} ${y}</h1>
   <div class="row" style="justify-content:space-between"><button class="linkbtn" data-act="mes" data-m="${prev}">‹ ${MES[pm-1]}</button><button class="linkbtn" data-act="mes" data-m="${next}">${MES[nm-1]} ›</button></div>
-  <div class="panel"><span class="sub">Total do mês</span><b class="num" style="font-family:var(--f-display);font-size:40px;line-height:1">${money(total)}</b><span class="sub">${ds.length} gasto${ds.length!==1?'s':''}</span></div>
+  <div class="panel"><span class="sub">Total do mês</span><b class="num" style="font-family:var(--f-display);font-size:30px;line-height:1">${money(total)}</b><span class="sub">${ds.length} gasto${ds.length!==1?'s':''}</span></div>
   ${lista.length?`<div class="panel" style="gap:10px"><h3>Por categoria</h3>${lista.map(([c,v])=>`<div class="row" style="justify-content:space-between;flex-wrap:nowrap"><span style="min-width:0">${esc(c)}</span><strong class="num">${money(v)}</strong></div>`).join('')}</div>
   <div class="panel" style="gap:10px"><h3>Quem pagou</h3>${Object.entries(quem).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<div class="row" style="justify-content:space-between"><span>${esc(c)}</span><strong class="num">${money(v)}</strong></div>`).join('')}</div>`:'<div class="panel"><p class="empty">Nenhum gasto neste mês.</p></div>'}`;
 };
@@ -384,7 +396,7 @@ async function compress(file){
   }catch(e){ return file; }
 }
 async function uploadFiles(files){
-  readForm(); const msg=document.getElementById('upmsg'); if(msg) msg.hidden=false;
+  const alvo=UI.tab==='pagar'?UI.pform:UI.form; if(UI.tab==='pagar') readPForm(); else readForm(); const msg=document.getElementById('upmsg'); if(msg) msg.hidden=false;
   for(const f0 of files){
     let type=f0.type||(/\.pdf$/i.test(f0.name)?'application/pdf':'');
     if(!(type.startsWith('image/')||type==='application/pdf')){ toast(`${f0.name}: envie foto ou PDF.`,true); continue; }
@@ -394,7 +406,7 @@ async function uploadFiles(files){
     const path=`${SESSION.user.id}/${dkey(now()).slice(0,7)}/${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`;
     const {error}=await sb.storage.from(BUCKET).upload(path,f,{contentType:type,upsert:false});
     if(error){ dbErr(error,`Não consegui enviar ${f0.name}.`); continue; }
-    UI.form.comprovantes.push({path,name:f0.name,type}); signUrls([path]);
+    alvo.comprovantes.push({path,name:f0.name,type}); signUrls([path]);
   }
   draw();
 }
@@ -408,7 +420,6 @@ function openDesp(id){
   let acts='';
   if(APROVACAO&&d.aprov==='pendente'&&adm) acts+= beneficiario?`<div class="callout">Este reembolso é para você. Outro ADM precisa aprovar.</div>`:`<div class="row"><button class="btn pri" data-act="aprovar" data-id="${d.id}">Aprovar</button><button class="btn danger" data-act="recusarA" data-id="${d.id}">Recusar</button></div>`;
   if(UI.confirm==='recusar:'+d.id) acts+=`<form class="panel" id="frec" data-id="${d.id}"><label class="f"><span>Motivo da recusa</span><input id="r-mot" required placeholder="Ex.: sem comprovante, gasto pessoal"></label><div class="row"><button class="btn danger" type="submit">Recusar gasto</button><button class="btn" type="button" data-act="cancelc">Voltar</button></div></form>`;
-  if(adm&&d.aprov==='aprovada'&&d.origem==='pessoal'&&d.reemb!=='reembolsado'&&!beneficiario) acts+=`<button class="btn ok" data-act="reemb1" data-id="${d.id}">Marcar como reembolsado</button>`;
   const podeEditar=adm||(u.nivel==='manager'&&d.lancado_por===u.id&&(APROVACAO?d.aprov==='pendente':d.reemb!=='reembolsado'));
   if(podeEditar) acts+=`<div class="row"><button class="btn" data-act="editar" data-id="${d.id}">Editar</button>${adm?(UI.confirm==='del:'+d.id?`<button class="btn danger" data-act="del" data-id="${d.id}">Confirmar exclusão</button><button class="btn" data-act="cancelc">Não excluir</button>`:`<button class="btn danger" data-act="delA" data-id="${d.id}">Excluir</button>`):''}</div>`;
   const comp=d.comprovantes||[];
@@ -422,7 +433,6 @@ function openDesp(id){
      <dt>Categoria</dt><dd>${d.categoria?esc(d.categoria):'<span class="c-warn">a classificar</span>'}</dd>
      <dt>Forma</dt><dd>${esc(d.forma)}</dd>
      <dt>Saiu de</dt><dd>${d.origem==='empresa'?'Conta da empresa':`Dinheiro de <strong>${esc(pagadorNome(d))}</strong> · reembolsar`}</dd>
-     ${d.reemb==='reembolsado'?`<dt>Reembolsado</dt><dd>${brTs(d.reemb_em)} por ${esc(pName(d.reemb_por))}</dd>`:''}
      ${d.aprov==='recusada'?`<dt>Motivo</dt><dd class="c-bad">${esc(d.motivo)}</dd>`:''}
      ${d.obs?`<dt>Obs.</dt><dd>${esc(d.obs)}</dd>`:''}
      <dt>Lançado por</dt><dd>${esc(pName(d.lancado_por))} · <span class="num">${brTs(d.criado_em)}</span></dd>
@@ -445,8 +455,9 @@ function openForm(d){
 VIEWS.form=()=>{
   const F=UI.form, more=UI.formMore||!!F.id;
   const hoje=dkey(now()), ontem=(()=>{const d=now();d.setDate(d.getDate()-1);return dkey(d);})();
-  const quem=F.origem==='empresa'?'empresa':(F.pagador_id||'outro');
-  const opts=[...ativos().map(s=>[s.id,s.id===ME().id?s.nome+' (eu)':s.nome]),['outro','Outra pessoa'],['empresa','Conta da empresa']];
+  const plist=pessoasLista();
+  const quem=F.origem==='empresa'?'empresa':F.pagador_id?'id:'+F.pagador_id:(F.pagador_nome&&plist.some(p=>p.k==='nome:'+norm(F.pagador_nome))?'nome:'+norm(F.pagador_nome):'outro');
+  const opts=[...plist.map(p=>[p.k,p.nome]),['outro','Outra pessoa'],['empresa','Conta da empresa']];
   return `<div><h1 class="v">${F.id?'Editar gasto':'Novo gasto'}</h1><div class="sub">${APROVACAO&&ME().nivel==='manager'&&!F.id?'Depois de lançar, um ADM aprova.':'Valor, fornecedor e forma de pagamento são obrigatórios.'}</div></div>
   <form class="panel" id="fdesp" novalidate>
     <label class="f"><span>Valor</span><input id="d-valor" class="money num" inputmode="decimal" placeholder="R$ 0,00" value="${typeof F.valor==='number'?F.valor.toFixed(2).replace('.',','):esc(F.valor)}" required></label>
@@ -479,9 +490,9 @@ function readForm(){
   const F=UI.form; if(!F||!document.getElementById('fdesp')) return;
   const v=id=>document.getElementById(id)?.value??'';
   F.valor=v('d-valor'); F.data=v('d-data')||F.data; F.favorecido=v('d-fav').trim(); F.doc_favorecido=v('d-doc').trim();
-  F.descricao=v('d-desc').trim(); F.categoria=v('d-cat'); F.obs=v('d-obs').trim(); F.pagador_nome=v('d-pagn').trim();
+  F.descricao=v('d-desc').trim(); F.categoria=v('d-cat'); F.obs=v('d-obs').trim(); { const pn=document.getElementById('d-pagn'); if(pn&&!pn.closest('label').hidden) F.pagador_nome=pn.value.trim(); }
 }
-function parseValor(s){ s=String(s).replace(/[R$\s]/g,''); if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.'); const n=Number(s); return isFinite(n)?Math.round(n*100)/100:NaN; }
+function parseValor(s){ s=String(s).replace(/[R$\s]/g,''); if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.'); else if(/^\d{1,3}(\.\d{3})+$/.test(s)) s=s.replace(/\./g,''); const n=Number(s); return isFinite(n)?Math.round(n*100)/100:NaN; }
 
 // ---------- menu e telas extras ----------
 VIEWS.menu=()=>{
@@ -500,33 +511,66 @@ VIEWS.menu=()=>{
   <button class="btn" data-act="logout">Sair da conta</button>`;
 };
 VIEWS.reemb=()=>{
-  const ss=saldoPorPessoa().filter(x=>x.aberto>0), tot=ss.reduce((a,x)=>a+x.aberto,0);
+  const adm=ME().nivel==='adm', ss=saldoPorPessoa().filter(x=>Math.abs(x.aberto)>0.004), tot=ss.reduce((a,x)=>a+Math.max(0,x.aberto),0);
   return `${VOLTAR()}<h1 class="v">Quem tem a receber</h1>
-  ${ss.length?`<div class="panel" style="gap:0">${ss.map(x=>{const n=DESP.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&d.reemb!=='reembolsado'&&(d.pagador_id||('outro:'+(d.pagador_nome||'Outra pessoa')))===x.k).length;return `<button class="prow" data-act="pessoa" data-k="${esc(x.k)}"><span><strong>${esc(x.nome)}</strong><span class="sub" style="display:block">${n} gasto${n!==1?'s':''}</span></span><b class="num">${money(x.aberto)}</b></button>`;}).join('')}</div>
-  <div class="row" style="justify-content:space-between"><span class="sub">Total a reembolsar</span><b class="num" style="font-family:var(--f-display);font-size:26px">${money(tot)}</b></div>`
+  ${adm?`<button class="btn ok big" data-act="pagar">Registrar pagamento de reembolso</button>`:''}
+  ${ss.length?`<div class="panel" style="gap:0">${ss.map(x=>`<button class="prow" data-act="pessoa" data-k="${esc(x.k)}"><span><strong>${esc(x.nome)}</strong><span class="sub" style="display:block">${x.abertos} gasto${x.abertos!==1?'s':''} em aberto</span></span><b class="num"${x.aberto<0?' style="color:var(--ok)"':''}>${money(x.aberto)}</b></button>`).join('')}</div>
+  <div class="row" style="justify-content:space-between"><span class="sub">Total a reembolsar</span><b class="num" style="font-family:var(--f-display);font-size:22px">${money(tot)}</b></div>`
   :'<div class="panel"><p class="empty">Ninguém tem reembolso a receber.</p></div>'}
-  <button class="linkbtn" data-act="tab" data-tab="reembPagos">Ver reembolsos já pagos</button>`;
+  <button class="linkbtn" data-act="tab" data-tab="reembPagos">Ver pagamentos já feitos</button>`;
 };
+function rowPag(r,canDel){ const dt=pD(r.data); return `<div class="drow s-ok" style="grid-template-columns:52px 1fr auto">
+  <span class="dd"><b class="num">${pad(dt.getDate())}</b><span>${MES3[dt.getMonth()]}</span></span>
+  <span class="db"><span class="t">${esc(nomeK(keyR(r)))}</span><span class="p">${esc(r.forma)}${r.obs?' · '+esc(r.obs):''} · por ${esc(pName(r.lancado_por))}</span>
+   ${(r.comprovantes||[]).length?`<div class="files" style="margin-top:6px;grid-template-columns:repeat(auto-fill,minmax(64px,1fr))">${r.comprovantes.map(c=>fileThumb(c,false)).join('')}</div>`:''}
+   ${canDel?(UI.confirm==='delpag:'+r.id?`<span class="row" style="margin-top:6px"><button class="btn sm danger" data-act="delpag" data-id="${r.id}">Confirmar exclusão</button><button class="btn sm" data-act="cancelc">Não</button></span>`:`<button class="linkbtn" style="font-size:12px;color:var(--bad)" data-act="delpagA" data-id="${r.id}">Excluir pagamento</button>`):''}</span>
+  <span class="val num" style="color:var(--ok)">${money(r.valor)}</span></div>`; }
 VIEWS.pessoa=()=>{
-  const u=ME(), adm=u.nivel==='adm', k=UI.pessoa;
-  const s0=saldoPorPessoa().find(x=>x.k===k)||{nome:'—',aberto:0,pago:0,total:0};
-  const js=DESP.filter(d=>d.origem==='pessoal'&&d.aprov==='aprovada'&&d.reemb!=='reembolsado'&&(d.pagador_id||('outro:'+(d.pagador_nome||'Outra pessoa')))===k);
+  const adm=ME().nivel==='adm', k=UI.pessoa;
+  const s0=saldoPorPessoa().find(x=>x.k===k)||{nome:nomeK(k),aberto:0,pago:0,total:0};
+  const abertos=DESP.filter(d=>d.origem==='pessoal'&&ativa(d)&&keyD(d)===k&&COVER[d.id]!=='ok');
+  const pags=REEMB.filter(r=>keyR(r)===k);
   return `${VOLTAR('reemb')}<h1 class="v">${esc(s0.nome)}</h1>
-  <div class="panel"><span class="sub">A receber</span><b class="num" style="font-family:var(--f-display);font-size:40px;line-height:1;color:var(--warn)">${money(s0.aberto)}</b><span class="sub">Já reembolsado: ${money(s0.pago)} · Pagou no total: ${money(s0.total)}</span></div>
-  ${adm&&s0.aberto>0&&k!==u.id?(UI.confirm==='reembAll:'+k?`<div class="callout">Marcar ${money(s0.aberto)} como reembolsado para ${esc(s0.nome)}? Faça isso depois que o dinheiro sair da conta da empresa.</div><div class="row"><button class="btn ok" data-act="reembAll" data-k="${esc(k)}">Confirmar reembolso</button><button class="btn" data-act="cancelc">Voltar</button></div>`:`<button class="btn ok big" data-act="reembAllA" data-k="${esc(k)}">Registrar reembolso</button>`):''}
-  ${adm&&s0.aberto>0&&k===u.id?'<p class="sub" style="margin:0">O seu reembolso é registrado por outro ADM.</p>':''}
-  ${js.length?porMes(js):''}`;
+  <div class="panel"><span class="sub">${s0.aberto<0?'Recebeu a mais':'A receber'}</span><b class="num bigval" style="color:${s0.aberto<0?'var(--ok)':'var(--warn)'}">${money(Math.abs(s0.aberto))}</b><span class="sub">Pagou: ${money(s0.total)} · Já recebeu: ${money(s0.pago)}</span></div>
+  ${adm?`<button class="btn ok big" data-act="pagar" data-k="${esc(k)}">Registrar pagamento de reembolso</button>`:''}
+  ${pags.length?`<section class="mgroup"><div class="mh"><h2>Pagamentos recebidos</h2><span class="num">${money(s0.pago)}</span></div>${pags.map(r=>rowPag(r,adm)).join('')}</section>`:''}
+  ${abertos.length?`<section class="mgroup"><div class="mh"><h2>Gastos em aberto</h2></div>${abertos.map(rowDesp).join('')}</section>`:''}`;
 };
 VIEWS.reembPagos=()=>{
-  const js=DESP.filter(d=>d.reemb==='reembolsado');
-  return `${VOLTAR('reemb')}<h1 class="v">Reembolsos pagos</h1>${js.length?porMes(js):'<div class="panel"><p class="empty">Nenhum reembolso pago ainda.</p></div>'}`;
+  const adm=ME().nivel==='adm';
+  return `${VOLTAR('reemb')}<h1 class="v">Pagamentos feitos</h1>
+  ${adm&&REEMB.length?'<button class="linkbtn" data-act="csvpag">Exportar planilha dos pagamentos</button>':''}
+  ${REEMB.length?REEMB.map(r=>rowPag(r,adm)).join(''):'<div class="panel"><p class="empty">Nenhum pagamento de reembolso ainda.</p></div>'}`;
 };
+VIEWS.pagar=()=>{
+  const P=UI.pform, ss=saldoPorPessoa(), pessoas=[...pessoasLista()];
+  ss.filter(x=>!pessoas.some(p=>p.k===x.k)).forEach(x=>pessoas.push({k:x.k,nome:x.nome}));
+  const saldo=k=>(ss.find(x=>x.k===k)||{aberto:0}).aberto;
+  const hoje=dkey(now()), ontem=(()=>{const d=now();d.setDate(d.getDate()-1);return dkey(d);})();
+  return `${VOLTAR('reemb')}<h1 class="v">Pagamento de reembolso</h1><div class="sub">Pode ser parcial: o saldo da pessoa diminui pelo valor pago.</div>
+  <form class="panel" id="fpag" novalidate>
+    <div class="f"><span>Para quem</span><div class="chips wrap" role="group" aria-label="Para quem">${pessoas.map(p=>`<button type="button" data-ppessoa="${esc(p.k)}" aria-pressed="${P.k===p.k}">${esc(p.nome)}${saldo(p.k)>0?` · ${money(saldo(p.k))}`:''}</button>`).join('')}</div></div>
+    <label class="f"><span>Valor pago</span><input id="p-valor" class="money num" inputmode="decimal" placeholder="R$ 0,00" value="${esc(P.valor)}"></label>
+    ${P.k&&saldo(P.k)>0?`<small class="sub" style="margin-top:-8px">Saldo atual: ${money(saldo(P.k))}${parseValor(P.valor)>0?` · depois deste pagamento: ${money(saldo(P.k)-parseValor(P.valor))}`:''}</small>`:''}
+    <div class="f"><span>Forma</span><div class="chips wrap" role="group" aria-label="Forma">${['PIX','Transferência','Dinheiro','Outro'].map(x=>`<button type="button" data-pforma="${x}" aria-pressed="${P.forma===x}">${x}</button>`).join('')}</div></div>
+    <div class="f"><span>Quando</span><div class="chips wrap" role="group" aria-label="Data">
+      <button type="button" data-pdia="${hoje}" aria-pressed="${P.data===hoje}">Hoje</button><button type="button" data-pdia="${ontem}" aria-pressed="${P.data===ontem}">Ontem</button>
+      <input type="date" id="p-data" value="${P.data}" aria-label="Outra data" class="datechip"></div></div>
+    <div class="f"><span>Comprovante (opcional)</span>
+      <div class="files">${P.comprovantes.map(c=>fileThumb(c,true)).join('')}<label class="file up" for="d-file">${ICON_CAM}<br>Foto ou PDF</label></div>
+      <input type="file" id="d-file" accept="image/*,application/pdf" multiple hidden><p class="sub" id="upmsg" hidden style="margin:0">Enviando…</p></div>
+    <label class="f"><span>Observação</span><input id="p-obs" value="${esc(P.obs)}" placeholder="Ex.: PIX da conta do Thiago"></label>
+    <p class="err" id="p-err" hidden></p>
+    <button class="btn ok big" type="submit">Registrar pagamento</button>
+  </form>`;
+};
+function readPForm(){ const P=UI.pform; if(!P||!document.getElementById('fpag')) return; const v=id=>document.getElementById(id)?.value??''; P.valor=v('p-valor'); P.data=v('p-data')||P.data; P.obs=v('p-obs').trim(); }
 VIEWS.pessoas=()=>{
   const me=ME();
   return `${VOLTAR('menu','Menu')}<div><h1 class="v">Pessoas</h1><div class="sub">Quem acessa e com qual nível.</div></div>
   ${PROFILES.filter(p=>p.status==='pendente').map(p=>`<section class="panel"><h3>${esc(p.email)} pediu acesso</h3><div class="row"><select class="btn" id="lv-${p.id}" aria-label="Nível"><option value="basic">Basic</option><option value="manager">Manager</option><option value="adm">ADM</option></select><button class="btn pri" data-act="libera" data-id="${p.id}">Liberar</button><button class="btn danger" data-act="bloq" data-id="${p.id}">Recusar</button></div></section>`).join('')}
   <section class="panel"><h3>Com acesso</h3><div class="tablewrap"><table><thead><tr><th>Nome</th><th>E-mail</th><th>Nível</th><th></th></tr></thead><tbody>
-  ${PROFILES.filter(p=>p.status!=='pendente').map(p=>`<tr><td>${esc(p.nome)}</td><td class="mono">${esc(p.email)}</td><td><select class="btn sm" data-nivel="${p.id}" ${p.id===me.id?'disabled':''} aria-label="Nível de ${esc(p.nome)}">${Object.entries(NIVEL).map(([k,l])=>`<option value="${k}" ${p.nivel===k?'selected':''}>${l}</option>`).join('')}</select></td><td>${p.id===me.id?'<span class="sub">você</span>':p.status==='ativo'?`<button class="btn sm danger" data-act="bloq" data-id="${p.id}">Bloquear</button>`:`<button class="btn sm" data-act="libera" data-id="${p.id}">Desbloquear</button>`}</td></tr>`).join('')}
+  ${PROFILES.filter(p=>p.status!=='pendente').map(p=>`<tr><td><input class="btn sm" style="width:110px;text-align:left" data-nomeid="${p.id}" value="${esc(p.nome)}" aria-label="Nome"></td><td class="mono">${esc(p.email)}</td><td><select class="btn sm" data-nivel="${p.id}" ${p.id===me.id?'disabled':''} aria-label="Nível de ${esc(p.nome)}">${Object.entries(NIVEL).map(([k,l])=>`<option value="${k}" ${p.nivel===k?'selected':''}>${l}</option>`).join('')}</select></td><td>${p.id===me.id?'<span class="sub">você</span>':p.status==='ativo'?`<button class="btn sm danger" data-act="bloq" data-id="${p.id}">Bloquear</button>`:`<button class="btn sm" data-act="libera" data-id="${p.id}">Desbloquear</button>`}</td></tr>`).join('')}
   </tbody></table></div></section>
   <section class="panel"><h3>Liberados antes de entrar</h3><p class="sub" style="margin:0">Quem estiver aqui já entra liberado no primeiro login.</p>
     ${CONV.filter(c=>!PROFILES.some(p=>p.email.toLowerCase()===c.email.toLowerCase())).map(c=>`<div class="row" style="justify-content:space-between"><span>${esc(c.nome)} · <span class="mono">${esc(c.email)}</span> · ${NIVEL[c.nivel]}</span><button class="btn sm danger" data-act="rmconv" data-email="${esc(c.email)}">Remover</button></div>`).join('')||'<p class="empty">Ninguém esperando o primeiro login.</p>'}
@@ -549,15 +593,20 @@ async function upd(id,patch,okMsg){ const {error}=await sb.from('despesas').upda
 document.addEventListener('change',async e=>{
   const el=e.target;
   if(el.id==='d-file'){ const fs=[...el.files]; el.value=''; if(fs.length) await uploadFiles(fs); return; }
+  if(el.dataset.nomeid){ const nome=el.value.trim(); if(!nome) return; const {error}=await sb.from('profiles').update({nome}).eq('id',el.dataset.nomeid); if(error) dbErr(error); else { toast('Nome alterado'); await loadAll(); draw(); } return; }
   if(el.dataset.nivel){ const {error}=await sb.from('profiles').update({nivel:el.value}).eq('id',el.dataset.nivel); if(error) dbErr(error); else { toast('Nível alterado'); await loadAll(); draw(); } }
 });
 document.addEventListener('focusout',()=>setTimeout(()=>{ if(UI.pendingDraw&&!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('form'))) draw(); },0));
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-act],[data-desp],[data-quem],[data-dia],[data-lmode],[data-forma]');
+  const t=e.target.closest('[data-act],[data-desp],[data-quem],[data-dia],[data-lmode],[data-forma],[data-ppessoa],[data-pforma],[data-pdia]');
   if(!t){ if(e.target.id==='sheet') closeSheet(); return; }
   if(t.dataset.lmode){ const el=document.getElementById('l-email'); if(el) UI.email=el.value.trim(); UI.lmode=t.dataset.lmode; UI.aviso=''; draw(); return; }
+  if(t.dataset.ppessoa){ readPForm(); const k=t.dataset.ppessoa; UI.pform.k=k; const sl=(saldoPorPessoa().find(x=>x.k===k)||{}).aberto; if(sl>0) UI.pform.valor=sl.toFixed(2).replace('.',','); draw(); return; }
+  if(t.dataset.pforma){ readPForm(); UI.pform.forma=t.dataset.pforma; draw(); return; }
+  if(t.dataset.pdia){ readPForm(); UI.pform.data=t.dataset.pdia; const di=document.getElementById('p-data'); if(di) di.value=t.dataset.pdia; draw(); return; }
   if(t.dataset.forma){ readForm(); UI.form.forma=t.dataset.forma; draw(); return; }
-  if(t.dataset.quem){ readForm(); const k=t.dataset.quem; if(k==='empresa'){UI.form.origem='empresa';} else {UI.form.origem='pessoal'; UI.form.pagador_id=k==='outro'?null:k;} draw(); return; }
+  if(t.dataset.quem){ readForm(); const k=t.dataset.quem; if(k==='empresa'){UI.form.origem='empresa';} else { UI.form.origem='pessoal';
+      if(k.startsWith('id:')){UI.form.pagador_id=k.slice(3);UI.form.pagador_nome='';} else if(k.startsWith('nome:')){UI.form.pagador_id=null;UI.form.pagador_nome=nomeK(k);} else {UI.form.pagador_id=null;UI.form.pagador_nome='';} } draw(); return; }
   if(t.dataset.dia){ readForm(); UI.form.data=t.dataset.dia; const di=document.getElementById('d-data'); if(di) di.value=t.dataset.dia; draw(); return; }
   if(t.dataset.desp&&!t.dataset.act){ UI.confirm=null; openDesp(t.dataset.desp); return; }
   const a=t.dataset.act, id=t.dataset.id, d=id&&DESP.find(x=>x.id===id);
@@ -567,22 +616,22 @@ document.addEventListener('click',async e=>{
     case 'tab': UI.tab=t.dataset.tab; UI.confirm=null; closeSheet(); draw(); window.scrollTo(0,0); return;
     case 'filtro': UI.filtro=t.dataset.f; UI.tab='lista'; draw(); return;
     case 'mes': UI.mes=t.dataset.m; draw(); return;
+    case 'pagar': { const k=t.dataset.k||null; const sl=k?(saldoPorPessoa().find(x=>x.k===k)||{}).aberto:0; UI.pform={k,valor:sl>0?sl.toFixed(2).replace('.',','):'',forma:'PIX',data:dkey(now()),obs:'',comprovantes:[]}; UI.tab='pagar'; closeSheet(); draw(); window.scrollTo(0,0); return; }
+    case 'delpagA': UI.confirm='delpag:'+t.dataset.id; draw(); return;
+    case 'delpag': { const {error}=await sb.from('reembolsos').delete().eq('id',t.dataset.id); if(error){dbErr(error);return;} UI.confirm=null; toast('Pagamento excluído'); await loadAll(); draw(); return; }
+    case 'csvpag': { const q=x=>'"'+String(x??'').replace(/"/g,'""')+'"'; const lines=[['data','pessoa','valor','forma','obs','lancado_por'].join(';')].concat([...REEMB].sort((a,b)=>a.data.localeCompare(b.data)).map(r=>[r.data,nomeK(keyR(r)),String(r.valor).replace('.',','),r.forma,r.obs,pName(r.lancado_por)].map(q).join(';')));
+      const blob=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'}); const a2=document.createElement('a'); a2.href=URL.createObjectURL(blob); a2.download=`implay-reembolsos-${dkey(now())}.csv`; document.body.appendChild(a2); a2.click(); setTimeout(()=>{URL.revokeObjectURL(a2.href);a2.remove();},1000); return; }
     case 'pessoa': UI.pessoa=t.dataset.k; UI.confirm=null; UI.tab='pessoa'; draw(); window.scrollTo(0,0); return;
     case 'nova': UI.formMore=false; openForm(null); return;
     case 'more': readForm(); UI.formMore=!UI.formMore; draw(); return;
     case 'close': closeSheet(); return;
     case 'cancelc': UI.confirm=null; UI.sheet?openDesp(UI.sheet):draw(); return;
-    case 'rmfile': readForm(); UI.form.comprovantes=UI.form.comprovantes.filter(c=>c.path!==t.dataset.path); draw(); return;
+    case 'rmfile': { const alvo=UI.tab==='pagar'?UI.pform:UI.form; if(UI.tab==='pagar') readPForm(); else readForm(); alvo.comprovantes=alvo.comprovantes.filter(c=>c.path!==t.dataset.path); draw(); return; }
     case 'editar': UI.formMore=true; openForm(d); return;
     case 'aprovar': if(await upd(d.id,{aprov:'aprovada'},'Gasto aprovado')) openDesp(d.id); return;
     case 'recusarA': UI.confirm='recusar:'+d.id; openDesp(d.id); return;
-    case 'reemb1': if(await upd(d.id,{reemb:'reembolsado'},'Marcado como reembolsado')) openDesp(d.id); return;
     case 'delA': UI.confirm='del:'+d.id; openDesp(d.id); return;
     case 'del': { const {error}=await sb.from('despesas').delete().eq('id',d.id); if(error){dbErr(error);return;} const paths=(d.comprovantes||[]).map(c=>c.path); if(paths.length) await sb.storage.from(BUCKET).remove(paths); closeSheet(); toast('Gasto excluído'); await loadAll(); draw(); return; }
-    case 'reembAllA': UI.confirm='reembAll:'+t.dataset.k; draw(); return;
-    case 'reembAll': { const k=t.dataset.k; const ids=DESP.filter(x=>x.origem==='pessoal'&&x.aprov==='aprovada'&&x.reemb!=='reembolsado'&&(x.pagador_id||('outro:'+(x.pagador_nome||'Outra pessoa')))===k).map(x=>x.id);
-      const {error}=await sb.from('despesas').update({reemb:'reembolsado'}).in('id',ids); if(error){dbErr(error);return;}
-      UI.confirm=null; toast(`${ids.length} gasto${ids.length!==1?'s':''} reembolsado${ids.length!==1?'s':''}`); await loadAll(); draw(); return; }
     case 'libera': { const sel=document.getElementById('lv-'+id); const patch={status:'ativo'}; if(sel) patch.nivel=sel.value; const {error}=await sb.from('profiles').update(patch).eq('id',id); if(error){dbErr(error);return;} toast('Acesso liberado'); await loadAll(); draw(); return; }
     case 'bloq': { const {error}=await sb.from('profiles').update({status:'bloqueado'}).eq('id',id); if(error){dbErr(error);return;} toast('Acesso bloqueado'); await loadAll(); draw(); return; }
     case 'rmconv': { const {error}=await sb.from('convites').delete().eq('email',t.dataset.email); if(error){dbErr(error);return;} await loadAll(); draw(); return; }
@@ -610,6 +659,18 @@ document.addEventListener('submit',async e=>{
       if(f.id==='fesqueci'){ const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:back}); if(error) return fail(tr(error.message)); UI.aviso=`Se existir conta para <strong>${esc(email)}</strong>, chegou um link no e-mail. Toque nele para criar a senha nova.`; draw(); return; }
       if(f.id==='fnova'){ const {error}=await sb.auth.updateUser({password:senha}); if(error) return fail(tr(error.message)); UI.lmode='senha'; toast('Senha alterada'); start(); return; }
     } finally { btn.disabled=false; }
+  }
+  if(f.id==='fpag'){
+    readPForm(); const P=UI.pform, err=document.getElementById('p-err'), fail=m=>{err.textContent=m;err.hidden=false;err.scrollIntoView({block:'center'});};
+    const valor=parseValor(P.valor);
+    if(!P.k) return fail('Escolha para quem foi o pagamento.');
+    if(!(valor>0)) return fail('Informe o valor pago. Ex.: 2.000,00');
+    const row={valor,data:P.data,forma:P.forma||'PIX',obs:P.obs,comprovantes:P.comprovantes,pessoa_id:P.k.startsWith('id:')?P.k.slice(3):null,pessoa_nome:P.k.startsWith('id:')?'':nomeK(P.k)};
+    const btn=f.querySelector('button[type=submit]'); btn.disabled=true;
+    const {error}=await sb.from('reembolsos').insert(row); btn.disabled=false;
+    if(error) return fail(error.message);
+    await loadAll(); const sl=(saldoPorPessoa().find(x=>x.k===P.k)||{aberto:0}).aberto;
+    toast(`Pagamento registrado · saldo de ${nomeK(P.k)}: ${money(sl)}`); UI.pessoa=P.k; UI.pform=null; UI.confirm=null; UI.tab='pessoa'; draw(); window.scrollTo(0,0); return;
   }
   if(f.id==='fdesp'){
     readForm(); const F=UI.form, err=document.getElementById('d-err'), fail=m=>{err.textContent=m;err.hidden=false;err.scrollIntoView({block:'center'});};
