@@ -8,6 +8,6 @@
 // do banco (schema.sql). NUNCA cole aqui a chave "service_role".
 // =====================================================================
 window.IMPLAY_CONFIG = {
-  SUPABASE_URL: "",
-  SUPABASE_ANON_KEY: ""
+  SUPABASE_URL: "https://clnxclvcrserbteecosv.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_hEsbgE8Yv3q8pFExHyXWHg_SRmfe0XF"
 };
