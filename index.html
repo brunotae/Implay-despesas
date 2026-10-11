@@ -300,7 +300,7 @@ function drawOuter(){
   }
   if(st==='pendente'){ app.innerHTML=gate('aguarde',`<div class="callout">Sua conta (${esc(SESSION.user.email)}) foi criada e está esperando um ADM liberar.</div><div class="row"><button class="btn" data-act="reload">Já liberaram? Atualizar</button><button class="btn" data-act="logout">Sair</button></div>`); return true; }
   if(st==='bloqueado'){ app.innerHTML=gate('sem acesso',`<div class="callout">Seu acesso está bloqueado. Fale com o Tae.</div><button class="btn" data-act="logout">Sair</button>`); return true; }
-  if(st==='seller'){ app.innerHTML=gate('despesas',`<div class="callout">Este app é só para os sócios. Seus jobs e pagamentos ficam na Implay Central.</div><a class="btn" href="../Implay-central/">Abrir a Implay Central</a><button class="btn" data-act="logout">Sair</button>`); return true; }
+  if(st==='seller'){ app.innerHTML=gate('despesas',`<div class="callout">Este app é só para os sócios. Seus jobs e pagamentos ficam na Implay Central.</div><a class="btn" href="../implay-central/">Abrir a Implay Central</a><button class="btn" data-act="logout">Sair</button>`); return true; }
   if(st==='semperfil'){ app.innerHTML=gate('despesas',`<div class="callout">Sua conta existe, mas o cadastro não foi criado. Confira se o schema.sql foi rodado no Supabase antes do primeiro login.</div><button class="btn" data-act="logout">Sair</button>`); return true; }
   return false;
 }
