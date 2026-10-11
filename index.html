@@ -311,7 +311,7 @@ function draw(){
   UI.pendingDraw=false;
   if(drawOuter()){ closeSheet(); return; }
   const u=ME(), app=document.getElementById('app');
-  if(!document.getElementById('view')) app.innerHTML=`<header class="top"><div class="topin"><div class="brand">implay<b>°</b><small>despesas</small></div><div class="spacer"></div><span class="lvl" id="lvl"></span><span id="ic"></span></div></header><main id="view"></main>`;
+  if(!document.getElementById('view')) app.innerHTML=`<header class="top"><div class="topin"><button class="brand" data-act="tab" data-tab="home" aria-label="Ir para o início" style="background:none;border:0;padding:0;color:inherit;cursor:pointer">implay<b>°</b><small>despesas</small></button><div class="spacer"></div><span class="lvl" id="lvl"></span><span id="ic"></span></div></header><main id="view"></main>`;
   document.getElementById('lvl').textContent=NIVEL[u.nivel];
   const home=UI.tab==='home';
   document.getElementById('ic').innerHTML=`<button class="iconbtn" data-act="tab" data-tab="${home?'menu':'home'}" aria-label="${home?'Menu':'Voltar ao início'}" aria-pressed="${!home}">${home?ICON_USER:ICON_X}</button>`;
