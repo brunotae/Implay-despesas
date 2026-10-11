@@ -184,7 +184,7 @@ const br=k=>{const d=pD(k);return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${
 const brTs=iso=>{if(!iso)return '';const d=new Date(iso);return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${String(d.getFullYear()).slice(2)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;};
 const money=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const NIVEL={adm:'ADM',manager:'Manager',basic:'Basic'};
+const NIVEL={adm:'ADM',manager:'Manager',basic:'Basic',seller:'Seller'};
 const FORMAS=['PIX','Cartão de crédito','Cartão de débito','Boleto','Transferência','Dinheiro'];
 // Etapa de aprovação desligada por enquanto (ligar = true + rodar o SQL da aprovação)
 const APROVACAO=false;
@@ -271,6 +271,7 @@ async function start(){
     MEP=me.data;
     if(!MEP){ UI.status='semperfil'; draw(); return; }
     if(MEP.status!=='ativo'){ UI.status=MEP.status; draw(); return; }
+    if(MEP.nivel==='seller'){ UI.status='seller'; draw(); return; }
     await loadAll(); UI.status='ok'; draw();
     if(!channel){ channel=sb.channel('implay-despesas').on('postgres_changes',{event:'*',schema:'public',table:'despesas'},scheduleReload).on('postgres_changes',{event:'*',schema:'public',table:'profiles'},scheduleReload).on('postgres_changes',{event:'*',schema:'public',table:'reembolsos'},scheduleReload).subscribe(); }
   }catch(e){ UI.status='erro'; UI.erro=e.message; draw(); }
@@ -299,6 +300,7 @@ function drawOuter(){
   }
   if(st==='pendente'){ app.innerHTML=gate('aguarde',`<div class="callout">Sua conta (${esc(SESSION.user.email)}) foi criada e está esperando um ADM liberar.</div><div class="row"><button class="btn" data-act="reload">Já liberaram? Atualizar</button><button class="btn" data-act="logout">Sair</button></div>`); return true; }
   if(st==='bloqueado'){ app.innerHTML=gate('sem acesso',`<div class="callout">Seu acesso está bloqueado. Fale com o Tae.</div><button class="btn" data-act="logout">Sair</button>`); return true; }
+  if(st==='seller'){ app.innerHTML=gate('despesas',`<div class="callout">Este app é só para os sócios. Seus jobs e pagamentos ficam na Implay Central.</div><a class="btn" href="../Implay-central/">Abrir a Implay Central</a><button class="btn" data-act="logout">Sair</button>`); return true; }
   if(st==='semperfil'){ app.innerHTML=gate('despesas',`<div class="callout">Sua conta existe, mas o cadastro não foi criado. Confira se o schema.sql foi rodado no Supabase antes do primeiro login.</div><button class="btn" data-act="logout">Sair</button>`); return true; }
   return false;
 }
